@@ -191,15 +191,32 @@ function playerMove(i,cell){
   aiMove();
 }
 
-function aiMove(){
-  let i=difficulty.value==="hard"
-    ? minimax(board,"O").i
-    : random();
-  board[i]="O";
-  grid.children[i].textContent="O";
-  play(clickSound);
-  statusText.textContent=taunts[Math.floor(Math.random()*taunts.length)];
-  checkEnd("O");
+function aiMove() {
+  // Check if game is already over before making a move
+  if (gameOver) return;
+  
+  let moveIndex;
+  if (difficulty.value === "hard") {
+    moveIndex = minimax(board, "O").index;
+  } else {
+    // For easy/medium, get a random valid move
+    const emptyCells = board.map((v, i) => v === "" ? i : -1).filter(v => v !== -1);
+    if (emptyCells.length === 0) return; // No moves available
+    moveIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+  }
+  
+  // Make sure the move is valid
+  if (moveIndex !== -1 && board[moveIndex] === "") {
+    board[moveIndex] = "O";
+    grid.children[moveIndex].textContent = "O";
+    play(clickSound);
+    statusText.textContent = taunts[Math.floor(Math.random() * taunts.length)];
+    checkEnd("O");
+  }
+  // In aiMove() function
+if (difficulty.value === "hard") {
+  moveIndex = minimax(board, "O").index;  // Changed from .i to .index
+}
 }
 
 function checkEnd(p){
@@ -231,29 +248,31 @@ function updateScores(){
   dScore.textContent=scores.d;
 }
 
-function random(){
-  return board.map((v,i)=>v==""?i:null).filter(v=>v!==null)[Math.floor(Math.random()*9)];
+function random() {
+  const emptyCells = board.map((v, i) => v === "" ? i : null).filter(v => v !== null);
+  // Return -1 if no empty cells (shouldn't happen since checkEnd is called first)
+  return emptyCells.length > 0 ? emptyCells[Math.floor(Math.random() * emptyCells.length)] : -1;
 }
 
 // Hard AI
-function minimax(b,p){
-  if(win(b,"X")) return{score:-10};
-  if(win(b,"O")) return{score:10};
-  if(!b.includes("")) return{score:0};
+function minimax(b, p) {
+  if (win(b, "X")) return { score: -10 };
+  if (win(b, "O")) return { score: 10 };
+  if (!b.includes("")) return { score: 0 };
 
-  let best={score:p==="O"?-Infinity:Infinity};
-  b.forEach((v,i)=>{
-    if(v===""){
-      b[i]=p;
-      let s=minimax(b,p==="O"?"X":"O").score;
-      b[i]="";
-      if(p==="O"&&s>best.score||p==="X"&&s<best.score)
-        best={score:s,i};
+  let best = { score: p === "O" ? -Infinity : Infinity, index: -1 };
+  b.forEach((v, i) => {
+    if (v === "") {
+      b[i] = p;
+      let result = minimax(b, p === "O" ? "X" : "O");
+      b[i] = "";
+      if ((p === "O" && result.score > best.score) || (p === "X" && result.score < best.score)) {
+        best = { score: result.score, index: i };
+      }
     }
   });
   return best;
 }
-
 function win(b,p){return wins.some(w=>w.every(i=>b[i]===p));}
 
 document.getElementById("reset").onclick=()=>{
