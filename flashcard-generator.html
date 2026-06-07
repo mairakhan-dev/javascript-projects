@@ -3,55 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Recall — master your flashcards</title>
+    <title>Recall — precision spaced repetition</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             background: #f8fafc;
             color: #0f172a;
-            line-height: 1.4;
             transition: background 0.2s, color 0.2s;
         }
-
-        body.dark {
-            background: #0f172a;
-            color: #eef2ff;
-        }
-
-        body.dark .sidebar {
-            background: #1e293b;
-            border-right-color: #334155;
-        }
-
-        body.dark .deck-card, body.dark .stat-card, body.dark .modal-card, body.dark .flashcard-3d, body.dark [style*="background:white"] {
-            background: #1e293b !important;
-            border-color: #334155 !important;
-            color: #e2e8f0;
-        }
-
-        body.dark .btn-secondary {
-            background: #334155;
-            border-color: #475569;
-            color: #e2e8f0;
-        }
-
-        body.dark .nav-item:hover, body.dark .nav-item.active {
-            background: #334155;
-        }
-
-        .app-layout {
-            display: flex;
-            min-height: 100vh;
-        }
-
+        body.dark { background: #0f172a; color: #eef2ff; }
+        body.dark .sidebar { background: #1e293b; border-right-color: #334155; }
+        body.dark .deck-card, body.dark .stat-card, body.dark .modal-card, body.dark .flashcard-3d,
+        body.dark [style*="background:white"], body.dark .glass-panel { background: #1e293b !important; border-color: #334155 !important; color: #e2e8f0; }
+        body.dark .btn-secondary { background: #334155; border-color: #475569; color: #e2e8f0; }
+        body.dark .nav-item:hover, body.dark .nav-item.active { background: #334155; }
+        body.dark .input-field, body.dark textarea { background: #334155; border-color: #475569; color: white; }
+        .app-layout { display: flex; min-height: 100vh; }
         .sidebar {
             width: 280px;
             background: white;
@@ -61,9 +31,7 @@
             top: 0;
             height: 100vh;
             overflow-y: auto;
-            transition: background 0.2s;
         }
-
         .logo {
             font-size: 1.8rem;
             font-weight: 700;
@@ -73,7 +41,6 @@
             color: transparent;
             margin-bottom: 2rem;
         }
-
         .nav-item {
             display: flex;
             align-items: center;
@@ -86,36 +53,11 @@
             cursor: pointer;
             transition: all 0.15s;
         }
-
-        body.dark .nav-item {
-            color: #cbd5e1;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            background: #f1f5f9;
-            color: #2563eb;
-        }
-
-        body.dark .nav-item:hover, body.dark .nav-item.active {
-            background: #334155;
-            color: #60a5fa;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 2rem 2.5rem;
-            overflow-y: auto;
-        }
-
-        .decks-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
+        .nav-item:hover, .nav-item.active { background: #f1f5f9; color: #2563eb; }
+        body.dark .nav-item { color: #cbd5e1; }
+        body.dark .nav-item:hover, body.dark .nav-item.active { background: #334155; color: #60a5fa; }
+        .main-content { flex: 1; padding: 2rem 2.5rem; overflow-y: auto; }
+        .decks-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
         .btn-primary {
             background: #2563eb;
             border: none;
@@ -129,12 +71,7 @@
             gap: 8px;
             transition: 0.1s;
         }
-
-        .btn-primary:hover {
-            background: #1d4ed8;
-            transform: scale(0.98);
-        }
-
+        .btn-primary:hover { background: #1d4ed8; transform: scale(0.98); }
         .btn-secondary {
             background: #f1f5f9;
             border: 1px solid #e2e8f0;
@@ -142,20 +79,8 @@
             border-radius: 40px;
             font-weight: 500;
             cursor: pointer;
-            transition: 0.1s;
         }
-
-        .btn-secondary:hover {
-            background: #e2e8f0;
-        }
-
-        .decks-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-
+        .decks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
         .deck-card {
             background: white;
             border-radius: 24px;
@@ -164,58 +89,14 @@
             transition: all 0.2s;
             cursor: pointer;
         }
-
-        .deck-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px -12px rgba(0,0,0,0.08);
-        }
-
-        .deck-cover {
-            height: 110px;
-            background: linear-gradient(145deg, #3b82f6, #8b5cf6);
-            position: relative;
-        }
-
-        .deck-info {
-            padding: 1.2rem;
-        }
-
-        .deck-name {
-            font-weight: 700;
-            font-size: 1.2rem;
-        }
-
-        .progress-bar {
-            background: #e2e8f0;
-            border-radius: 20px;
-            height: 6px;
-            margin: 12px 0;
-        }
-
-        .progress-fill {
-            background: #2563eb;
-            height: 100%;
-            border-radius: 20px;
-            width: 0%;
-        }
-
-        .folder-group {
-            margin-top: 24px;
-        }
-
-        .folder-title {
-            font-weight: 600;
-            margin: 20px 0 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #1e293b;
-        }
-
-        body.dark .folder-title {
-            color: #cbd5e1;
-        }
-
+        .deck-card:hover { transform: translateY(-3px); box-shadow: 0 15px 30px -12px rgba(0,0,0,0.08); }
+        .deck-cover { height: 110px; background: linear-gradient(145deg, #3b82f6, #8b5cf6); position: relative; }
+        .deck-info { padding: 1.2rem; }
+        .deck-name { font-weight: 700; font-size: 1.2rem; }
+        .progress-bar { background: #e2e8f0; border-radius: 20px; height: 6px; margin: 12px 0; }
+        .progress-fill { background: #2563eb; height: 100%; border-radius: 20px; width: 0%; }
+        .folder-group { margin-top: 24px; }
+        .folder-title { font-weight: 600; margin: 20px 0 12px; display: flex; align-items: center; gap: 8px; }
         .modal {
             position: fixed;
             top: 0; left: 0;
@@ -227,7 +108,6 @@
             justify-content: center;
             z-index: 1000;
         }
-
         .modal-card {
             background: white;
             border-radius: 32px;
@@ -237,7 +117,6 @@
             max-height: 85vh;
             overflow-y: auto;
         }
-
         .input-field, textarea {
             width: 100%;
             padding: 12px;
@@ -246,22 +125,7 @@
             margin: 12px 0;
             font-family: inherit;
         }
-
-        body.dark .input-field, body.dark textarea {
-            background: #334155;
-            border-color: #475569;
-            color: white;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .study-container {
-            max-width: 780px;
-            margin: 0 auto;
-        }
-
+        .study-container { max-width: 780px; margin: 0 auto; }
         .flashcard-3d {
             background: white;
             border-radius: 2rem;
@@ -272,14 +136,7 @@
             transition: 0.2s;
             text-align: center;
         }
-
-        .rating-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
+        .rating-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
         .rating-btn {
             background: #f1f5f9;
             border: none;
@@ -291,12 +148,6 @@
             cursor: pointer;
             transition: 0.1s;
         }
-
-        .rating-btn:hover {
-            background: #e2e8f0;
-            transform: scale(0.96);
-        }
-
         .toast {
             position: fixed;
             bottom: 24px;
@@ -309,11 +160,7 @@
             transform: translateY(100px);
             transition: 0.2s;
         }
-
-        .toast.show {
-            transform: translateY(0);
-        }
-
+        .toast.show { transform: translateY(0); }
         .theme-toggle {
             position: absolute;
             bottom: 2rem;
@@ -327,17 +174,7 @@
             background: #f1f5f9;
             width: calc(100% - 3rem);
         }
-
-        body.dark .theme-toggle {
-            background: #334155;
-        }
-
-        .bulk-textarea {
-            font-family: 'Monaco', monospace;
-            font-size: 0.85rem;
-            min-height: 200px;
-        }
-
+        .bulk-textarea { font-family: 'Monaco', monospace; font-size: 0.85rem; min-height: 200px; }
         .card-list-item {
             background: #f8fafc;
             border-radius: 16px;
@@ -347,10 +184,14 @@
             justify-content: space-between;
             align-items: center;
         }
-
-        body.dark .card-list-item {
-            background: #334155;
-        }
+        .glass-panel { background: white; border-radius: 2rem; padding: 2rem; margin-bottom: 2rem; }
+        .forgetting-curve { height: 180px; background: linear-gradient(135deg, #e0e7ff, #c7d2fe); border-radius: 1rem; margin: 1rem 0; position: relative; overflow: hidden; }
+        .heatmap { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 1rem; }
+        .heat-day { width: 28px; height: 28px; border-radius: 6px; background: #e2e8f0; }
+        .heat-day.level-1 { background: #bbf7d0; }
+        .heat-day.level-2 { background: #86efac; }
+        .heat-day.level-3 { background: #4ade80; }
+        .heat-day.level-4 { background: #22c55e; }
     </style>
 </head>
 <body>
@@ -360,7 +201,7 @@
         <div class="nav-item active" data-nav="home"><i class="fas fa-home"></i> Home</div>
         <div class="nav-item" data-nav="decks"><i class="fas fa-layer-group"></i> Decks & Folders</div>
         <div class="nav-item" data-nav="cards"><i class="fas fa-cards"></i> Card Manager</div>
-        <div class="nav-item" data-nav="stats"><i class="fas fa-chart-simple"></i> Progress</div>
+        <div class="nav-item" data-nav="stats"><i class="fas fa-chart-line"></i> Advanced Analytics</div>
         <div style="margin-top: 2rem;"><button id="createDeckSidebarBtn" class="btn-primary"><i class="fas fa-plus"></i> New Deck</button></div>
         <div class="theme-toggle" id="themeToggleBtn"><i class="fas fa-moon"></i> Dark theme</div>
     </div>
@@ -369,7 +210,7 @@
 <div id="toastMsg" class="toast">✔️ Done</div>
 
 <script>
-    // ---------- ADVANCED STATE: DECKS, FOLDERS, CARDS (SM-2) ----------
+    // ==================== ACCURATE STATS + ADVANCED FEATURES ====================
     let appState = {
         folders: [
             { id: 'f1', name: 'Science' },
@@ -379,110 +220,143 @@
             { id: 'd1', name: 'Biology', folderId: 'f1', coverGradient: 'linear-gradient(145deg,#2563eb,#7c3aed)', cards: [] },
             { id: 'd2', name: 'Physics', folderId: 'f1', coverGradient: 'linear-gradient(145deg,#059669,#10b981)', cards: [] },
             { id: 'd3', name: 'Spanish', folderId: 'f2', coverGradient: 'linear-gradient(145deg,#dc2626,#f97316)', cards: [] }
-        ]
+        ],
+        reviewLog: []  // { cardId, rating, timestamp, easeDelta }
     };
 
     function initDemo() {
-        if (localStorage.getItem('recall_ultimate_v2')) return;
+        if (localStorage.getItem('recall_ultimate_v3')) return;
         appState.decks[0].cards = [
-            { id: 'c1', front: 'Photosynthesis', back: 'Plants convert light into energy', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 10000 },
-            { id: 'c2', front: 'Mitochondria', back: 'Powerhouse of the cell', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 20000 },
-            { id: 'c3', front: 'Cell Division', back: 'Process of splitting into daughter cells', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 5000 }
+            { id: 'c1', front: 'Photosynthesis', back: 'Plants convert light into chemical energy', repetitions: 3, ease: 2.5, interval: 5, dueDate: Date.now() - 10000, lastReview: Date.now() - 432000000, lapses: 0 },
+            { id: 'c2', front: 'Mitochondria', back: 'Powerhouse of the cell, produces ATP', repetitions: 2, ease: 2.3, interval: 3, dueDate: Date.now() - 20000, lastReview: Date.now() - 259200000, lapses: 1 },
+            { id: 'c3', front: 'Cell Division', back: 'Mitosis and meiosis process', repetitions: 1, ease: 2.0, interval: 1, dueDate: Date.now() - 5000, lastReview: Date.now() - 86400000, lapses: 2 }
         ];
         appState.decks[1].cards = [
-            { id: 'c4', front: 'Newton\'s First Law', back: 'Inertia: object remains at rest or uniform motion', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 10000 },
-            { id: 'c5', front: 'Ohm\'s Law', back: 'V = I × R', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 10000 }
+            { id: 'c4', front: 'Newton\'s First Law', back: 'Inertia: object remains at rest or uniform motion', repetitions: 4, ease: 2.7, interval: 15, dueDate: Date.now() - 10000, lastReview: Date.now() - 1296000000, lapses: 0 },
+            { id: 'c5', front: 'Ohm\'s Law', back: 'V = I × R', repetitions: 2, ease: 2.1, interval: 3, dueDate: Date.now() - 10000, lastReview: Date.now() - 172800000, lapses: 1 }
         ];
         appState.decks[2].cards = [
-            { id: 'c6', front: 'Hola', back: 'Hello', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 5000 }
+            { id: 'c6', front: 'Hola', back: 'Hello / Hi', repetitions: 5, ease: 3.0, interval: 30, dueDate: Date.now() - 5000, lastReview: Date.now() - 2592000000, lapses: 0 }
         ];
+        for(let i=0;i<30;i++) {
+            appState.reviewLog.push({ cardId: 'c1', rating: Math.floor(Math.random()*4), timestamp: Date.now() - (i*86400000), easeDelta: 0.1 });
+        }
         saveFull();
     }
 
-    function saveFull() { localStorage.setItem('recall_ultimate_v2', JSON.stringify(appState)); }
+    function saveFull() { localStorage.setItem('recall_ultimate_v3', JSON.stringify(appState)); }
     function loadFull() {
-        let raw = localStorage.getItem('recall_ultimate_v2');
+        let raw = localStorage.getItem('recall_ultimate_v3');
         if (raw) appState = JSON.parse(raw);
         else initDemo();
     }
 
+    // SM-2 with accurate tracking
     function updateCard(card, rating) {
         let quality = [0,2,3,4][rating];
-        if(card.repetitions === undefined) { card.repetitions = 0; card.ease = 2.5; card.interval = 0; }
+        let oldEase = card.ease;
+        if(card.repetitions === undefined) { card.repetitions = 0; card.ease = 2.5; card.interval = 0; card.lapses = 0; }
         if(quality >= 3) card.repetitions++;
-        else card.repetitions = 0;
+        else { card.repetitions = 0; card.lapses = (card.lapses || 0) + 1; }
+        
         if(card.repetitions === 1) card.interval = 1;
         else if(card.repetitions === 2) card.interval = 6;
         else card.interval = Math.round(card.interval * card.ease);
-        card.ease = Math.max(1.3, card.ease + (0.1 - (5-quality)*(0.08+(5-quality)*0.02)));
+        
+        let newEase = card.ease + (0.1 - (5-quality)*(0.08+(5-quality)*0.02));
+        card.ease = Math.max(1.3, Math.min(3.0, newEase));
         card.dueDate = Date.now() + (card.interval * 86400000);
         card.lastReview = Date.now();
+        
+        appState.reviewLog.push({
+            cardId: card.id,
+            rating: rating,
+            timestamp: Date.now(),
+            easeDelta: card.ease - oldEase,
+            interval: card.interval
+        });
         saveFull();
         return card.interval;
     }
 
-    function getDueCards() {
+    // ========== ACCURATE STATISTICS ==========
+    function getTrueRetention() {
+        let allCards = appState.decks.flatMap(d=>d.cards);
+        if(allCards.length === 0) return 0;
+        let totalSuccess = 0;
+        let totalReviews = 0;
+        for(let card of allCards) {
+            let cardLogs = appState.reviewLog.filter(l => l.cardId === card.id);
+            for(let log of cardLogs) {
+                totalReviews++;
+                if(log.rating >= 2) totalSuccess++;
+            }
+        }
+        return totalReviews === 0 ? 80 : Math.round((totalSuccess / totalReviews) * 100);
+    }
+
+    function getTrueMastered() {
+        let mastered = 0;
+        for(let deck of appState.decks) {
+            for(let card of deck.cards) {
+                if(card.repetitions >= 5 && card.ease > 2.3 && card.interval > 14) mastered++;
+            }
+        }
+        return mastered;
+    }
+
+    function getDueToday() {
+        let due = 0;
+        for(let deck of appState.decks) {
+            for(let card of deck.cards) {
+                if(!card.dueDate || card.dueDate <= Date.now()) due++;
+            }
+        }
+        return due;
+    }
+
+    function getWeakCards() {
+        let weak = [];
+        for(let deck of appState.decks) {
+            for(let card of deck.cards) {
+                if((card.lapses && card.lapses > 1) || (card.ease < 1.8) || (card.repetitions < 2 && card.interval < 3)) {
+                    weak.push({ front: card.front, deck: deck.name, ease: card.ease });
+                }
+            }
+        }
+        return weak.sort((a,b)=>a.ease - b.ease).slice(0,5);
+    }
+
+    function getStudyHeatmap() {
+        let last30 = [];
+        let today = new Date();
+        for(let i=29; i>=0; i--) {
+            let d = new Date(today);
+            d.setDate(today.getDate() - i);
+            let dateStr = d.toDateString();
+            let reviewsOnDay = appState.reviewLog.filter(l => new Date(l.timestamp).toDateString() === dateStr).length;
+            last30.push(reviewsOnDay);
+        }
+        return last30;
+    }
+
+    function getForgettingIndex() {
+        let cards = appState.decks.flatMap(d=>d.cards);
+        let totalLapses = cards.reduce((sum,c)=>sum + (c.lapses || 0), 0);
+        let totalReviews = appState.reviewLog.length;
+        return totalReviews === 0 ? 0 : Math.round((totalLapses / totalReviews) * 100);
+    }
+
+    let currentNav = 'home';
+    let studySession = { cards: [], index: 0, flipped: false };
+
+    function startGlobalStudy() {
         let due = [];
         for(let deck of appState.decks) {
             for(let card of deck.cards) {
                 if(!card.dueDate || card.dueDate <= Date.now()) due.push({...card, deckName: deck.name, deckId: deck.id});
             }
         }
-        return due;
-    }
-
-    let currentNav = 'home';
-    let studySession = { cards: [], index: 0, flipped: false };
-
-    // Theme handling
-    function initTheme() {
-        let theme = localStorage.getItem('recall_theme') || 'light';
-        if (theme === 'dark') document.body.classList.add('dark');
-        document.getElementById('themeToggleBtn')?.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            let isDark = document.body.classList.contains('dark');
-            localStorage.setItem('recall_theme', isDark ? 'dark' : 'light');
-        });
-    }
-
-    // Render Home
-    function renderHome() {
-        let dueCards = getDueCards();
-        let dueCount = dueCards.length;
-        let studyMinutes = Math.ceil(dueCount * 0.28);
-        let mastered = appState.decks.flatMap(d=>d.cards).filter(c=>c.repetitions>=4 && c.ease>2.2).length;
-        let totalCards = appState.decks.flatMap(d=>d.cards).length;
-        let retention = totalCards ? Math.floor(appState.decks.flatMap(d=>d.cards).reduce((acc,c)=>acc+(c.ease||2.5),0)/totalCards * 30) : 70;
-        let streak = localStorage.getItem('streak') ? parseInt(localStorage.getItem('streak')) : 2;
-        let weakCards = appState.decks.flatMap(d=>d.cards).filter(c=>c.ease && c.ease<1.8).slice(0,3).map(c=>c.front);
-        if(weakCards.length<3) weakCards = ['Review fundamentals', 'Practice daily', 'Active recall'];
-        const html = `
-            <div style="max-width: 1000px;">
-                <div style="background:white; border-radius:2rem; padding:2rem; margin-bottom:2rem;">
-                    <h1 style="font-size:2.2rem;">Good ${new Date().getHours()<12?'Morning':'Afternoon'}, Learner</h1>
-                    <div style="font-size:2.8rem; font-weight:700; color:#2563eb; margin:0.5rem 0;">${dueCount} cards due today</div>
-                    <div style="color:#475569;">⏱️ ~${studyMinutes} min study time</div>
-                    <button id="globalStudyBtn" style="margin-top:1.5rem;" class="btn-primary"><i class="fas fa-play"></i> Continue Studying →</button>
-                </div>
-                <div style="display:flex; gap:1.5rem; flex-wrap:wrap; margin-bottom:2rem;">
-                    <div class="stat-card" style="background:white; border-radius:1.5rem; padding:1.2rem 1.8rem; flex:1;"><div style="color:#64748b;">Retention</div><div style="font-size:2rem; font-weight:700;">${retention}%</div></div>
-                    <div class="stat-card" style="background:white; border-radius:1.5rem; padding:1.2rem 1.8rem; flex:1;"><div style="color:#64748b;">Mastered</div><div style="font-size:2rem; font-weight:700;">${mastered}</div></div>
-                    <div class="stat-card" style="background:white; border-radius:1.5rem; padding:1.2rem 1.8rem; flex:1;"><div style="color:#64748b;">Streak</div><div style="font-size:2rem; font-weight:700;">${streak} days</div></div>
-                </div>
-                <div style="background:white; border-radius:1.5rem; padding:1.5rem; margin-bottom:2rem;">
-                    <div style="font-weight:600;">📌 Weak areas</div><div style="display:flex; gap:0.8rem; margin-top:0.8rem;">${weakCards.map(w=>`<span style="background:#fee2e2; padding:0.3rem 1rem; border-radius:40px;">${w}</span>`).join('')}</div>
-                </div>
-                <h3>Your decks</h3>
-                <div class="decks-grid" id="homeDecksGrid"></div>
-            </div>
-        `;
-        document.getElementById('mainView').innerHTML = html;
-        document.getElementById('globalStudyBtn')?.addEventListener('click', startGlobalStudy);
-        renderDecksGridInto('homeDecksGrid', true);
-    }
-
-    function startGlobalStudy() {
-        let due = getDueCards();
         if(due.length===0) { showToast('No cards due! 🎉'); return; }
         studySession.cards = due;
         studySession.index = 0;
@@ -496,7 +370,7 @@
         if(!deck) return;
         let due = deck.cards.filter(c=> (!c.dueDate || c.dueDate <= Date.now()));
         if(due.length===0) { showToast('No cards due in this deck'); return; }
-        studySession.cards = due.map(c => ({...c, deckId: deck.id, deckName: deck.name}));
+        studySession.cards = due.map(c => ({...c, deckName: deck.name, deckId: deck.id}));
         studySession.index = 0;
         studySession.flipped = false;
         currentNav = 'study';
@@ -505,7 +379,7 @@
 
     function renderStudyPage() {
         if(studySession.index >= studySession.cards.length) {
-            showToast('Session complete! Great job.');
+            showToast('Session complete! Great job. +15 XP');
             currentNav = 'home';
             renderHome();
             return;
@@ -514,7 +388,7 @@
         let flipped = studySession.flipped;
         let html = `
             <div class="study-container">
-                <div style="text-align:center; color:#475569;">${studySession.index+1} / ${studySession.cards.length}</div>
+                <div style="text-align:center; color:#475569; margin-bottom:1rem;">${studySession.index+1} / ${studySession.cards.length} · <span id="intervalPreview"></span></div>
                 <div class="flashcard-3d" id="flashcardArea">
                     <div style="font-size:0.75rem; color:#2563eb;">${flipped ? 'ANSWER' : 'QUESTION'}</div>
                     <div style="font-size:1.8rem; font-weight:500; margin-top:1rem;">${flipped ? card.back : card.front}</div>
@@ -524,9 +398,9 @@
                 </div>
                 <div id="ratingsArea" style="display:none;" class="rating-buttons">
                     <button class="rating-btn" data-rating="0">Again <small>10min</small></button>
-                    <button class="rating-btn" data-rating="1">Hard <small>1d</small></button>
-                    <button class="rating-btn" data-rating="2">Good <small>5d</small></button>
-                    <button class="rating-btn" data-rating="3">Easy <small>14d</small></button>
+                    <button class="rating-btn" data-rating="1">Hard <small>1 day</small></button>
+                    <button class="rating-btn" data-rating="2">Good <small>5 days</small></button>
+                    <button class="rating-btn" data-rating="3">Easy <small>14 days</small></button>
                 </div>
                 <button id="backHomeStudy" style="margin-top:2rem; background:none; border:none; color:#2563eb; cursor:pointer;">← Back home</button>
             </div>
@@ -542,6 +416,10 @@
             let ratingsDiv = document.getElementById('ratingsArea');
             ratingsDiv.style.display = 'flex';
             document.querySelectorAll('.rating-btn').forEach(btn => {
+                btn.addEventListener('mouseenter', () => {
+                    let preview = {'0':'10 minutes','1':'1 day','2':'5 days','3':'14 days'};
+                    document.getElementById('intervalPreview').innerText = `Next review: ${preview[btn.dataset.rating]}`;
+                });
                 btn.addEventListener('click', (e) => {
                     let rating = parseInt(btn.dataset.rating);
                     let originalCard = studySession.cards[studySession.index];
@@ -560,14 +438,52 @@
         }
     }
 
+    function renderHome() {
+        let dueCount = getDueToday();
+        let studyMinutes = Math.ceil(dueCount * 0.35);
+        let mastered = getTrueMastered();
+        let retention = getTrueRetention();
+        let streak = parseInt(localStorage.getItem('streak') || '2');
+        let weakTopics = getWeakCards();
+        let forgettingIndex = getForgettingIndex();
+        let heatmap = getStudyHeatmap();
+        
+        const html = `
+            <div style="max-width: 1100px;">
+                <div class="glass-panel">
+                    <h1 style="font-size:2rem;">Good ${new Date().getHours()<12?'Morning':'Afternoon'}, Learner</h1>
+                    <div style="font-size:3rem; font-weight:700; color:#2563eb; margin:0.5rem 0;">${dueCount} cards due today</div>
+                    <div style="color:#475569; margin-bottom:1.5rem;">⏱️ ~${studyMinutes} min study time · Forgetting index: ${forgettingIndex}%</div>
+                    <button id="globalStudyBtn" class="btn-primary" style="font-size:1.1rem; padding:0.8rem 2rem;"><i class="fas fa-play"></i> Continue Studying →</button>
+                </div>
+                <div style="display:flex; gap:1.5rem; flex-wrap:wrap; margin-bottom:2rem;">
+                    <div class="stat-card" style="background:white; border-radius:1.5rem; padding:1.2rem 1.8rem; flex:1;"><div style="color:#64748b;">📊 Retention (true)</div><div style="font-size:2rem; font-weight:700;">${retention}%</div><div>based on ${appState.reviewLog.length} reviews</div></div>
+                    <div class="stat-card" style="background:white; border-radius:1.5rem; padding:1.2rem 1.8rem; flex:1;"><div style="color:#64748b;">🏆 Mastered cards</div><div style="font-size:2rem; font-weight:700;">${mastered}</div><div>interval >14 days, ease>2.3</div></div>
+                    <div class="stat-card" style="background:white; border-radius:1.5rem; padding:1.2rem 1.8rem; flex:1;"><div style="color:#64748b;">🔥 Current streak</div><div style="font-size:2rem; font-weight:700;">${streak} days</div><div>best: ${Math.max(streak, parseInt(localStorage.getItem('bestStreak')||'2'))}</div></div>
+                </div>
+                <div class="glass-panel">
+                    <div style="font-weight:600; margin-bottom:1rem;">📈 30-day study heatmap</div>
+                    <div class="heatmap">${heatmap.map(v => `<div class="heat-day ${v>8?'level-4':v>4?'level-3':v>1?'level-2':'level-1'}" title="${v} reviews"></div>`).join('')}</div>
+                </div>
+                <div class="glass-panel">
+                    <div style="font-weight:600; margin-bottom:1rem;">🎯 Weak areas (need focused review)</div>
+                    <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">${weakTopics.map(w=>`<span style="background:#fee2e2; padding:0.4rem 1rem; border-radius:40px;">📘 ${w.front} · ${w.deck}</span>`).join('') || '<span>No weak spots, keep going!</span>'}</div>
+                </div>
+                <h3>Your decks</h3>
+                <div class="decks-grid" id="homeDecksGrid"></div>
+            </div>
+        `;
+        document.getElementById('mainView').innerHTML = html;
+        document.getElementById('globalStudyBtn')?.addEventListener('click', startGlobalStudy);
+        renderDecksGridInto('homeDecksGrid', true);
+    }
+
     function renderDecksManager() {
         let html = `<div class="decks-header"><h2>📚 Decks & Folders</h2><div><button id="newFolderBtn" class="btn-secondary"><i class="fas fa-folder"></i> Folder</button> <button id="newDeckManagerBtn" class="btn-primary"><i class="fas fa-plus"></i> Deck</button></div></div>`;
         for(let folder of appState.folders) {
-            let folderDecks = appState.decks.filter(d => d.folderId === folder.id);
             html += `<div class="folder-group"><div class="folder-title"><i class="fas fa-folder-open"></i> ${folder.name}</div><div class="decks-grid" id="folder-${folder.id}"></div></div>`;
         }
-        let uncategorized = appState.decks.filter(d => !d.folderId);
-        if(uncategorized.length || true) html += `<div class="folder-group"><div class="folder-title"><i class="fas fa-inbox"></i> Uncategorized</div><div class="decks-grid" id="uncategorizedGrid"></div></div>`;
+        html += `<div class="folder-group"><div class="folder-title"><i class="fas fa-inbox"></i> Uncategorized</div><div class="decks-grid" id="uncategorizedGrid"></div></div>`;
         document.getElementById('mainView').innerHTML = html;
         for(let folder of appState.folders) renderDecksGridInto(`folder-${folder.id}`, false, folder.id);
         renderDecksGridInto(`uncategorizedGrid`, false, null);
@@ -583,7 +499,7 @@
             let name = document.getElementById('deckNameInput').value;
             let folderId = document.getElementById('folderSelect').value || null;
             if(name) {
-                if(!deckId) appState.decks.push({ id: Date.now()+'', name, folderId, coverGradient: 'linear-gradient(145deg,#3b82f6,#a855f7)', cards: [] });
+                if(!deckId) appState.decks.push({ id: Date.now()+'', name, folderId, coverGradient: `linear-gradient(145deg,#${Math.floor(Math.random()*16777215).toString(16)},#4f46e5)`, cards: [] });
                 else { let d = appState.decks.find(d=>d.id===deckId); if(d) { d.name = name; d.folderId = folderId; } }
                 saveFull(); renderDecksManager(); showToast('Deck saved');
                 modalDiv.remove();
@@ -596,29 +512,28 @@
         let container = document.getElementById(containerId);
         if(!container) return;
         let decksToShow = filterFolder !== undefined ? appState.decks.filter(d => d.folderId === filterFolder) : appState.decks;
-        container.innerHTML = decksToShow.map(deck => `
+        container.innerHTML = decksToShow.map(deck => {
+            let masteredCount = deck.cards.filter(c=>c.repetitions>=4 && c.ease>2.2).length;
+            let masteryPct = deck.cards.length ? Math.floor((masteredCount/deck.cards.length)*100) : 0;
+            return `
             <div class="deck-card" data-deck-id="${deck.id}">
                 <div class="deck-cover" style="background:${deck.coverGradient}"></div>
                 <div class="deck-info">
                     <div class="deck-name">${deck.name}</div>
                     <div>${deck.cards.length} cards · ${deck.cards.filter(c=>c.dueDate<=Date.now()).length} due</div>
-                    <div class="progress-bar"><div class="progress-fill" style="width:${Math.floor(deck.cards.filter(c=>c.repetitions>2).length/deck.cards.length*100)||0}%"></div></div>
+                    <div class="progress-bar"><div class="progress-fill" style="width:${masteryPct}%"></div></div>
                     <div style="display:flex; gap:8px; margin-top:12px;"><button class="studyDeckBtn" data-id="${deck.id}" style="background:#2563eb; color:white; border:none; border-radius:30px; padding:6px 14px;">Study</button> <button class="editDeckBtn" data-id="${deck.id}" style="background:#e2e8f0; border:none; border-radius:30px;">Edit</button> <button class="deleteDeckBtn" data-id="${deck.id}" style="background:#fee2e2;">Delete</button></div>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
         document.querySelectorAll('.studyDeckBtn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); startDeckStudy(btn.dataset.id); }));
         document.querySelectorAll('.editDeckBtn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); openDeckModal(btn.dataset.id); }));
         document.querySelectorAll('.deleteDeckBtn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); if(confirm('Delete deck?')) { appState.decks = appState.decks.filter(d => d.id !== btn.dataset.id); saveFull(); renderDecksManager(); showToast('Deleted'); } }));
         if(clickToStudy) document.querySelectorAll('.deck-card').forEach(card => card.addEventListener('click', (e) => { if(!e.target.closest('button')) startDeckStudy(card.dataset.deckId); }));
     }
 
-    // Enhanced Card Manager with Add Card, Bulk Import
     function renderCardManager() {
-        let html = `
-            <div class="decks-header"><h2>📇 Card Manager</h2><div><button id="addSingleCardBtn" class="btn-primary"><i class="fas fa-plus"></i> Add Card</button><button id="bulkImportBtn" class="btn-secondary"><i class="fas fa-upload"></i> Bulk Import</button></div></div>
-            <div id="cardsListContainer" class="cards-list"></div>
-        `;
+        let html = `<div class="decks-header"><h2>📇 Card Manager</h2><div><button id="addSingleCardBtn" class="btn-primary"><i class="fas fa-plus"></i> Add Card</button><button id="bulkImportBtn" class="btn-secondary"><i class="fas fa-upload"></i> Bulk Import</button></div></div><div id="cardsListContainer"></div>`;
         document.getElementById('mainView').innerHTML = html;
         refreshCardsList();
         document.getElementById('addSingleCardBtn')?.addEventListener('click', () => openAddCardModal());
@@ -633,13 +548,10 @@
                 allCards.push({...card, deckName: deck.name, deckId: deck.id});
             }
         }
-        if(allCards.length === 0) {
-            container.innerHTML = '<div style="text-align:center; padding:3rem;">No cards yet. Click "Add Card" to create your first flashcard.</div>';
-            return;
-        }
+        if(allCards.length === 0) { container.innerHTML = '<div style="text-align:center; padding:3rem;">No cards yet.</div>'; return; }
         container.innerHTML = allCards.map(card => `
             <div class="card-list-item">
-                <div><strong>${card.front}</strong><br><span style="font-size:0.8rem;">→ ${card.back}</span><br><small style="color:#64748b;">📘 ${card.deckName}</small></div>
+                <div><strong>${card.front}</strong><br><span style="font-size:0.8rem;">→ ${card.back}</span><br><small>📘 ${card.deckName} · ease: ${card.ease?.toFixed(2)||2.5} · interval: ${card.interval||0}d</small></div>
                 <div><button class="deleteCardBtn" data-deck="${card.deckId}" data-cardid="${card.id}" style="background:#fee2e2; border:none; padding:6px 12px; border-radius:20px;">Delete</button></div>
             </div>
         `).join('');
@@ -651,7 +563,7 @@
 
     function openAddCardModal() {
         let modalDiv = document.createElement('div'); modalDiv.className = 'modal';
-        modalDiv.innerHTML = `<div class="modal-card"><h3>Add New Card</h3><select id="cardDeckSelect" class="input-field">${appState.decks.map(d=>`<option value="${d.id}">${d.name}</option>`).join('')}</select><input id="cardFrontInput" class="input-field" placeholder="Front / Question"><textarea id="cardBackInput" class="input-field" rows="3" placeholder="Back / Answer"></textarea><div style="display:flex; gap:12px;"><button id="saveCardBtn" class="btn-primary">Save Card</button><button id="closeCardModal">Cancel</button></div></div>`;
+        modalDiv.innerHTML = `<div class="modal-card"><h3>Add New Card</h3><select id="cardDeckSelect" class="input-field">${appState.decks.map(d=>`<option value="${d.id}">${d.name}</option>`).join('')}</select><input id="cardFrontInput" class="input-field" placeholder="Front"><textarea id="cardBackInput" class="input-field" rows="3" placeholder="Back"></textarea><div style="display:flex; gap:12px;"><button id="saveCardBtn" class="btn-primary">Save</button><button id="closeCardModal">Cancel</button></div></div>`;
         document.body.appendChild(modalDiv);
         document.getElementById('saveCardBtn').onclick = () => {
             let deckId = document.getElementById('cardDeckSelect').value;
@@ -659,7 +571,7 @@
             let back = document.getElementById('cardBackInput').value.trim();
             if(front && back) {
                 let deck = appState.decks.find(d=>d.id===deckId);
-                if(deck) { deck.cards.push({ id: Date.now()+''+Math.random(), front, back, repetitions:0, ease:2.5, interval:0, dueDate: Date.now() }); saveFull(); refreshCardsList(); showToast('Card added'); modalDiv.remove(); }
+                if(deck) { deck.cards.push({ id: Date.now()+''+Math.random(), front, back, repetitions:0, ease:2.5, interval:0, dueDate: Date.now(), lapses:0 }); saveFull(); refreshCardsList(); showToast('Card added'); modalDiv.remove(); }
             } else showToast('Fill both sides');
         };
         document.getElementById('closeCardModal').onclick = () => modalDiv.remove();
@@ -667,7 +579,7 @@
 
     function openBulkModal() {
         let modalDiv = document.createElement('div'); modalDiv.className = 'modal';
-        modalDiv.innerHTML = `<div class="modal-card"><h3>📦 Bulk Import Cards</h3><select id="bulkDeckSelect" class="input-field">${appState.decks.map(d=>`<option value="${d.id}">${d.name}</option>`).join('')}</select><textarea id="bulkData" class="input-field bulk-textarea" placeholder="Format: Front | Back&#10;Example:&#10;Photosynthesis | Plants convert light&#10;Mitochondria | Powerhouse of cell&#10;一行一个卡片，用竖线分隔"></textarea><div style="display:flex; gap:12px;"><button id="processBulkBtn" class="btn-primary">Import Cards</button><button id="closeBulkModal">Cancel</button></div></div>`;
+        modalDiv.innerHTML = `<div class="modal-card"><h3>📦 Bulk Import</h3><select id="bulkDeckSelect" class="input-field">${appState.decks.map(d=>`<option value="${d.id}">${d.name}</option>`).join('')}</select><textarea id="bulkData" class="input-field bulk-textarea" placeholder="Format: Front | Back&#10;Example:&#10;Photosynthesis | Plants convert light&#10;Mitochondria | Powerhouse"></textarea><div style="display:flex; gap:12px;"><button id="processBulkBtn" class="btn-primary">Import</button><button id="closeBulkModal">Cancel</button></div></div>`;
         document.body.appendChild(modalDiv);
         document.getElementById('processBulkBtn').onclick = () => {
             let deckId = document.getElementById('bulkDeckSelect').value;
@@ -681,32 +593,37 @@
                 if(line === '') continue;
                 let separator = line.includes('|') ? '|' : (line.includes(';') ? ';' : null);
                 let front, back;
-                if(separator) {
-                    let idx = line.indexOf(separator);
-                    front = line.substring(0, idx).trim();
-                    back = line.substring(idx+1).trim();
-                } else { front = line; back = line; }
-                if(front) {
-                    deck.cards.push({ id: Date.now()+''+Math.random()+added, front, back: back || front, repetitions:0, ease:2.5, interval:0, dueDate: Date.now() });
-                    added++;
-                }
+                if(separator) { let idx = line.indexOf(separator); front = line.substring(0, idx).trim(); back = line.substring(idx+1).trim(); }
+                else { front = line; back = line; }
+                if(front) { deck.cards.push({ id: Date.now()+''+Math.random()+added, front, back: back||front, repetitions:0, ease:2.5, interval:0, dueDate: Date.now(), lapses:0 }); added++; }
             }
-            if(added) { saveFull(); refreshCardsList(); showToast(`✨ Added ${added} cards!`); modalDiv.remove(); }
-            else showToast('No valid cards found');
+            if(added) { saveFull(); refreshCardsList(); showToast(`✨ Added ${added} cards`); modalDiv.remove(); }
+            else showToast('No valid cards');
         };
         document.getElementById('closeBulkModal').onclick = () => modalDiv.remove();
     }
 
-    function renderStats() {
+    function renderAdvancedStats() {
+        let retention = getTrueRetention();
+        let mastered = getTrueMastered();
         let totalCards = appState.decks.flatMap(d=>d.cards).length;
-        let mastered = appState.decks.flatMap(d=>d.cards).filter(c=>c.repetitions>=4).length;
-        let accuracy = totalCards ? Math.floor(appState.decks.flatMap(d=>d.cards).reduce((acc,c)=>acc+(c.ease||2.5),0)/totalCards * 30) : 70;
-        let html = `<div style="background:white; border-radius:2rem; padding:2rem;"><h2>📈 Learning Progress</h2><div style="display:flex; gap:2rem; margin:2rem 0;"><div>📊 Retention: ${accuracy}%</div><div>🏆 Mastered: ${mastered}</div><div>📚 Total cards: ${totalCards}</div></div><div class="progress-bar" style="width:100%"><div class="progress-fill" style="width:${totalCards?Math.floor(mastered/totalCards*100):0}%"></div></div><p style="margin-top:1rem;">Keep reviewing daily to strengthen memory.</p></div>`;
+        let totalReviews = appState.reviewLog.length;
+        let avgEase = totalCards ? (appState.decks.flatMap(d=>d.cards).reduce((a,c)=>a+(c.ease||2.5),0)/totalCards).toFixed(2) : 2.5;
+        let weakCount = getWeakCards().length;
+        let forgettingIdx = getForgettingIndex();
+        let html = `<div class="glass-panel"><h2>📊 Advanced Analytics</h2><div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1.5rem; margin:2rem 0;">
+            <div><strong>True Retention</strong><br><span style="font-size:2rem;">${retention}%</span><br>based on ${totalReviews} reviews</div>
+            <div><strong>Mastered Cards</strong><br><span style="font-size:2rem;">${mastered}</span><br>of ${totalCards} total</div>
+            <div><strong>Average Ease Factor</strong><br><span style="font-size:2rem;">${avgEase}</span><br>optimal range: 2.0-2.8</div>
+            <div><strong>Forgetting Index</strong><br><span style="font-size:2rem;">${forgettingIdx}%</span><br>target: <20%</div>
+            <div><strong>Weak Cards</strong><br><span style="font-size:2rem;">${weakCount}</span><br>need extra review</div>
+            <div><strong>Study Sessions</strong><br><span style="font-size:2rem;">${Math.floor(totalReviews/5)}</span><br>total reviews: ${totalReviews}</div>
+        </div><div class="progress-bar" style="width:100%"><div class="progress-fill" style="width:${retention}%"></div></div><p style="margin-top:1rem;">🎯 Goal: retention >85%, forgetting index <20%</p></div>`;
         document.getElementById('mainView').innerHTML = html;
     }
 
     function showToast(msg) { let t=document.getElementById('toastMsg'); t.innerHTML='✔️ '+msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }
-
+    function initTheme() { let theme = localStorage.getItem('recall_theme') || 'light'; if(theme==='dark') document.body.classList.add('dark'); document.getElementById('themeToggleBtn')?.addEventListener('click',()=>{ document.body.classList.toggle('dark'); localStorage.setItem('recall_theme', document.body.classList.contains('dark')?'dark':'light'); }); }
     function initRouting() {
         document.querySelectorAll('.nav-item').forEach(nav => {
             nav.addEventListener('click', () => {
@@ -716,16 +633,12 @@
                 if(navId === 'home') { currentNav='home'; renderHome(); }
                 else if(navId === 'decks') { currentNav='decks'; renderDecksManager(); }
                 else if(navId === 'cards') { currentNav='cards'; renderCardManager(); }
-                else if(navId === 'stats') { currentNav='stats'; renderStats(); }
+                else if(navId === 'stats') { currentNav='stats'; renderAdvancedStats(); }
             });
         });
         document.getElementById('createDeckSidebarBtn')?.addEventListener('click', () => openDeckModal());
     }
-
-    loadFull();
-    initTheme();
-    initRouting();
-    renderHome();
+    loadFull(); initTheme(); initRouting(); renderHome();
 </script>
 </body>
 </html>
