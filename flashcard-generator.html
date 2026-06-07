@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Recall — focused flashcard study</title>
+    <title>Recall — master your flashcards</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -15,567 +15,506 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #f5f7fb;
-            color: #1a1e2b;
+            background: #f8fafc;
+            color: #0f172a;
             line-height: 1.4;
         }
 
-        /* calm, whitespace-first design */
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 2rem 2rem 3rem;
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
         }
 
-        /* header minimal */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 2.5rem;
-            flex-wrap: wrap;
+        /* SIDEBAR — clean, spacious */
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #e9eef3;
+            padding: 2rem 1.5rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
         }
+
         .logo {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            letter-spacing: -0.3px;
             background: linear-gradient(135deg, #2563eb, #7c3aed);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-        }
-        .greeting {
-            font-size: 0.95rem;
-            color: #4b5563;
+            margin-bottom: 2rem;
         }
 
-        /* primary hero */
-        .hero-section {
-            background: white;
-            border-radius: 2rem;
-            padding: 2rem 2.5rem;
-            margin-bottom: 2.5rem;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.02), 0 2px 4px rgba(0,0,0,0.02);
-            border: 1px solid #eef2ff;
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem 1rem;
+            border-radius: 14px;
+            color: #334155;
+            font-weight: 500;
+            margin: 4px 0;
+            cursor: pointer;
+            transition: all 0.15s;
         }
-        .hero-title {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-        .due-large {
-            font-size: 3rem;
-            font-weight: 700;
+
+        .nav-item:hover, .nav-item.active {
+            background: #f1f5f9;
             color: #2563eb;
-            margin: 0.5rem 0 0.25rem;
         }
-        .study-time {
-            color: #4b5563;
+
+        .main-content {
+            flex: 1;
+            padding: 2rem 2.5rem;
+            overflow-y: auto;
+        }
+
+        /* cards & deck grid */
+        .decks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 1.5rem;
+            flex-wrap: wrap;
         }
-        .btn-primary-large {
+        .btn-primary {
             background: #2563eb;
             border: none;
-            padding: 1rem 2.5rem;
-            font-size: 1.2rem;
-            font-weight: 600;
-            border-radius: 60px;
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
             color: white;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(37,99,235,0.25);
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            transition: 0.1s;
         }
-        .btn-primary-large:hover {
-            background: #1d4ed8;
-            transform: scale(0.98);
-        }
-
-        /* 3‑card progress row */
-        .stats-row {
-            display: flex;
-            gap: 1.5rem;
-            margin: 2rem 0 2rem;
-            flex-wrap: wrap;
-        }
-        .stat-card {
-            background: white;
-            border-radius: 1.5rem;
-            padding: 1.25rem 1.8rem;
-            flex: 1;
-            border: 1px solid #eef2ff;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-        }
-        .stat-label {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #6b7280;
-            margin-bottom: 0.5rem;
-        }
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #111827;
-        }
-
-        /* weak areas minimal */
-        .weak-section {
-            background: white;
-            border-radius: 1.5rem;
-            padding: 1.5rem 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid #eef2ff;
-        }
-        .weak-title {
-            font-weight: 600;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
-        .weak-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-        }
-        .weak-tag {
-            background: #fee2e2;
-            color: #b91c1c;
-            padding: 0.4rem 1rem;
+        .btn-secondary {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            padding: 0.6rem 1.2rem;
             border-radius: 40px;
-            font-size: 0.85rem;
             font-weight: 500;
+            cursor: pointer;
         }
-
-        /* recent decks grid */
         .decks-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
             margin-top: 1rem;
         }
         .deck-card {
             background: white;
-            border-radius: 1.8rem;
+            border-radius: 24px;
             overflow: hidden;
-            transition: all 0.2s;
             border: 1px solid #eef2ff;
+            transition: all 0.2s;
             cursor: pointer;
         }
-        .deck-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
+        .deck-card:hover { transform: translateY(-3px); box-shadow: 0 15px 30px -12px rgba(0,0,0,0.08); }
+        .deck-cover { height: 110px; background: linear-gradient(145deg, #3b82f6, #8b5cf6); position: relative; }
+        .deck-info { padding: 1.2rem; }
+        .deck-name { font-weight: 700; font-size: 1.2rem; }
+        .progress-bar { background: #e2e8f0; border-radius: 20px; height: 6px; margin: 12px 0; }
+        .progress-fill { background: #2563eb; height: 100%; border-radius: 20px; width: 0%; }
+
+        /* folder group */
+        .folder-group {
+            margin-top: 24px;
         }
-        .deck-cover {
-            height: 120px;
-            background: linear-gradient(145deg, #3b82f6, #a855f7);
-        }
-        .deck-info {
-            padding: 1.2rem;
-        }
-        .deck-name {
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 0.25rem;
-        }
-        .deck-stats {
+        .folder-title {
+            font-weight: 600;
+            margin: 20px 0 12px;
             display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: #4b5563;
-            margin: 0.5rem 0;
-        }
-        .progress-bar-bg {
-            background: #e5e7eb;
-            border-radius: 20px;
-            height: 6px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            background: #2563eb;
-            width: 0%;
-            height: 100%;
-            border-radius: 20px;
+            align-items: center;
+            gap: 8px;
+            color: #1e293b;
         }
 
-        /* STUDY PAGE (full focus) */
-        .study-container {
-            max-width: 760px;
-            margin: 0 auto;
-            text-align: center;
+        /* modal backdrop */
+        .modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
-        .study-progress {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-bottom: 1.5rem;
+        .modal-card {
+            background: white;
+            border-radius: 32px;
+            padding: 2rem;
+            width: 480px;
+            max-width: 90%;
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border-radius: 20px;
+            border: 1px solid #cbd5e1;
+            margin: 12px 0;
+        }
+        .hidden { display: none; }
+
+        /* study page */
+        .study-container {
+            max-width: 780px;
+            margin: 0 auto;
         }
         .flashcard-3d {
             background: white;
             border-radius: 2rem;
             padding: 3rem 2rem;
             margin: 2rem 0;
-            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.05);
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s;
-            transform-style: preserve-3d;
-            border: 1px solid #eef2ff;
-        }
-        .flashcard-3d:hover {
-            transform: scale(1.01);
-            box-shadow: 0 30px 50px -20px rgba(0,0,0,0.2);
-        }
-        .card-side-label {
-            font-size: 0.75rem;
-            letter-spacing: 1px;
-            color: #2563eb;
-            margin-bottom: 1rem;
-        }
-        .card-text {
-            font-size: 1.8rem;
-            line-height: 1.4;
-            font-weight: 500;
+            transition: 0.2s;
+            text-align: center;
         }
         .rating-buttons {
             display: flex;
-            flex-wrap: wrap;
+            gap: 12px;
             justify-content: center;
-            gap: 1rem;
-            margin-top: 2rem;
+            flex-wrap: wrap;
         }
         .rating-btn {
-            background: #f3f4f6;
+            background: #f1f5f9;
             border: none;
-            padding: 0.8rem 1.5rem;
+            padding: 10px 20px;
             border-radius: 60px;
             font-weight: 600;
-            cursor: pointer;
-            transition: 0.1s;
             display: inline-flex;
             flex-direction: column;
-            align-items: center;
-            min-width: 100px;
-            font-size: 0.9rem;
+            cursor: pointer;
         }
-        .rating-btn small {
-            font-size: 0.7rem;
-            font-weight: normal;
-            color: #4b5563;
-        }
-        .rating-btn:hover {
-            background: #e5e7eb;
-            transform: scale(0.96);
-        }
-        .reveal-btn {
-            background: #111827;
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #0f172a;
             color: white;
-            padding: 0.8rem 2rem;
+            padding: 12px 24px;
             border-radius: 60px;
-            font-weight: 600;
-            margin-top: 1rem;
-            border: none;
-            cursor: pointer;
+            z-index: 1100;
+            transform: translateY(100px);
+            transition: 0.2s;
         }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 2rem;
-            color: #2563eb;
-            cursor: pointer;
-        }
-
-        /* utility */
-        .hidden {
-            display: none;
-        }
-        button {
-            background: none;
-            border: none;
-        }
+        .toast.show { transform: translateY(0); }
     </style>
 </head>
 <body>
-<div class="container" id="appRoot">
-    <!-- dynamic views will be injected here -->
+<div class="app-layout">
+    <div class="sidebar">
+        <div class="logo">recall.</div>
+        <div class="nav-item active" data-nav="home"><i class="fas fa-home"></i> Home</div>
+        <div class="nav-item" data-nav="decks"><i class="fas fa-layer-group"></i> Decks & Folders</div>
+        <div class="nav-item" data-nav="cards"><i class="fas fa-cards"></i> Card Manager</div>
+        <div class="nav-item" data-nav="stats"><i class="fas fa-chart-simple"></i> Progress</div>
+        <div style="margin-top: 2rem;"><button id="createDeckSidebarBtn" class="btn-primary"><i class="fas fa-plus"></i> New Deck</button></div>
+    </div>
+    <div class="main-content" id="mainView"></div>
 </div>
+<div id="toastMsg" class="toast">✔️ Done</div>
 
 <script>
-    // ------------------- FOCUSED DATA MODEL (SM-2) -------------------
-    let appData = {
-        decks: [],
-        studySettings: { defaultEase: 2.5 }
+    // ---------- ADVANCED STATE: DECKS, FOLDERS, CARDS (SM-2) ----------
+    let appState = {
+        folders: [
+            { id: 'f1', name: 'Science' },
+            { id: 'f2', name: 'Languages' }
+        ],
+        decks: [
+            { id: 'd1', name: 'Biology', folderId: 'f1', coverGradient: 'linear-gradient(145deg,#2563eb,#7c3aed)', cards: [] },
+            { id: 'd2', name: 'Physics', folderId: 'f1', coverGradient: 'linear-gradient(145deg,#059669,#10b981)', cards: [] },
+            { id: 'd3', name: 'Spanish', folderId: 'f2', coverGradient: 'linear-gradient(145deg,#dc2626,#f97316)', cards: [] }
+        ]
     };
-
-    // sample initial data
-    function initSampleData() {
-        if (localStorage.getItem('recall_app')) return;
-        appData.decks = [
-            { id: 'deck1', name: 'Biology 101', coverGradient: 'linear-gradient(145deg, #2563eb, #7c3aed)', cards: [
-                { id: 'c1', front: 'Photosynthesis', back: 'Process by which plants convert light energy into chemical energy', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 10000, lastReview: 0, tags: ['biology'], strength: 0 },
-                { id: 'c2', front: 'Mitochondria', back: 'Powerhouse of the cell', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 5000, lastReview: 0 },
-                { id: 'c3', front: 'Cell Division', back: 'Process by which a parent cell divides into two daughter cells', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 20000, lastReview: 0 }
-            ] },
-            { id: 'deck2', name: 'Physics', coverGradient: 'linear-gradient(145deg, #059669, #10b981)', cards: [
-                { id: 'c4', front: 'Newton\'s First Law', back: 'An object remains at rest or uniform motion unless acted by a force', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 10000, lastReview: 0 },
-                { id: 'c5', front: 'Ohm\'s Law', back: 'V = IR', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 10000, lastReview: 0 }
-            ] }
+    // demo cards
+    function initDemo() {
+        if (localStorage.getItem('recall_ultimate')) return;
+        appState.decks[0].cards = [
+            { id: 'c1', front: 'Photosynthesis', back: 'Plants convert light into energy', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 10000 },
+            { id: 'c2', front: 'Mitochondria', back: 'Powerhouse of the cell', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 20000 },
+            { id: 'c3', front: 'Cell Division', back: 'Process of splitting into daughter cells', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 5000 }
         ];
-        saveData();
+        appState.decks[1].cards = [
+            { id: 'c4', front: 'Newton\'s First Law', back: 'Inertia: object remains at rest or uniform motion', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 10000 },
+            { id: 'c5', front: 'Ohm\'s Law', back: 'V = I × R', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 10000 }
+        ];
+        appState.decks[2].cards = [
+            { id: 'c6', front: 'Hola', back: 'Hello', repetitions: 0, ease: 2.5, interval: 0, dueDate: Date.now() - 5000 }
+        ];
+        saveFull();
     }
 
-    function saveData() { localStorage.setItem('recall_app', JSON.stringify(appData)); }
-    function loadData() {
-        let raw = localStorage.getItem('recall_app');
-        if (raw) appData = JSON.parse(raw);
-        else initSampleData();
+    function saveFull() { localStorage.setItem('recall_ultimate', JSON.stringify(appState)); }
+    function loadFull() {
+        let raw = localStorage.getItem('recall_ultimate');
+        if (raw) appState = JSON.parse(raw);
+        else initDemo();
     }
 
-    // SM-2 update + next interval display
-    function updateCardSM2(card, rating) { // rating 0=again,1=hard,2=good,3=easy
-        let quality = [0, 2, 3, 4][rating];
-        if (card.repetitions === undefined) { card.repetitions = 0; card.ease = 2.5; card.interval = 0; }
-        if (quality >= 3) card.repetitions++;
+    // SM-2 core
+    function updateCard(card, rating) { // 0 again,1 hard,2 good,3 easy
+        let quality = [0,2,3,4][rating];
+        if(card.repetitions === undefined) { card.repetitions = 0; card.ease = 2.5; card.interval = 0; }
+        if(quality >= 3) card.repetitions++;
         else card.repetitions = 0;
-
-        if (card.repetitions === 1) card.interval = 1;
-        else if (card.repetitions === 2) card.interval = 6;
+        if(card.repetitions === 1) card.interval = 1;
+        else if(card.repetitions === 2) card.interval = 6;
         else card.interval = Math.round(card.interval * card.ease);
-        card.ease = Math.max(1.3, card.ease + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
+        card.ease = Math.max(1.3, card.ease + (0.1 - (5-quality)*(0.08+(5-quality)*0.02)));
         card.dueDate = Date.now() + (card.interval * 86400000);
         card.lastReview = Date.now();
-        saveData();
+        saveFull();
         return card.interval;
     }
 
-    // helper: get due cards count & weak topics based on review accuracy
-    function getDueCardsCount() {
-        let due = 0;
-        for (let deck of appData.decks) {
-            for (let card of deck.cards) {
-                if (!card.dueDate || card.dueDate <= Date.now()) due++;
+    function getDueCards() {
+        let due = [];
+        for(let deck of appState.decks) {
+            for(let card of deck.cards) {
+                if(!card.dueDate || card.dueDate <= Date.now()) due.push({...card, deckName: deck.name, deckId: deck.id});
             }
         }
         return due;
     }
 
-    function getWeakAreas() {
-        // naive: from cards with low ease (<2.0) or high failure (last rating low)
-        let weak = [];
-        for (let deck of appData.decks) {
-            for (let card of deck.cards) {
-                if (card.ease && card.ease < 2.0) weak.push(card.front);
-                else if (card.repetitions === 0 && card.dueDate && card.dueDate <= Date.now()) weak.push(card.front);
-            }
-        }
-        return [...new Set(weak)].slice(0, 5);
-    }
+    let currentNav = 'home';
+    let studySession = { cards: [], index: 0, flipped: false };
 
-    function getMasteredCount() {
-        let mastered = 0;
-        for (let deck of appData.decks) {
-            for (let card of deck.cards) {
-                if (card.repetitions >= 5 && card.ease > 2.3) mastered++;
-            }
-        }
-        return mastered;
-    }
-
-    function getRetentionRate() {
-        // mock based on due/total? approximate using average ease
-        let total = 0;
-        let sumEase = 0;
-        for (let deck of appData.decks) {
-            for (let card of deck.cards) {
-                total++;
-                sumEase += card.ease || 2.5;
-            }
-        }
-        if (total === 0) return 0;
-        let avgEase = sumEase / total;
-        return Math.min(100, Math.floor((avgEase - 1.3) / 1.7 * 100));
-    }
-
-    // ---------- RENDER HOMEPAGE (calm, minimal) ----------
-    let currentView = 'home';
-    let studySession = { deckId: null, dueCards: [], currentIndex: 0, isFlipped: false };
-
+    // RENDER HOME
     function renderHome() {
-        const dueTotal = getDueCardsCount();
-        const studyTimeEst = Math.ceil(dueTotal * 0.28); // ~17 sec per card
-        const streak = 3; // simplified from previous but keeping focus: retrieve from localStorage or compute
-        let streakVal = localStorage.getItem('recall_streak') ? parseInt(localStorage.getItem('recall_streak')) : 2;
-        const mastered = getMasteredCount();
-        const retention = getRetentionRate();
-        const weakTopics = getWeakAreas();
-
+        let dueCards = getDueCards();
+        let dueCount = dueCards.length;
+        let studyMinutes = Math.ceil(dueCount * 0.28);
+        let mastered = appState.decks.flatMap(d=>d.cards).filter(c=>c.repetitions>=4 && c.ease>2.2).length;
+        let retention = appState.decks.flatMap(d=>d.cards).length ? Math.floor(appState.decks.flatMap(d=>d.cards).reduce((acc,c)=>acc+(c.ease||2.5),0)/appState.decks.flatMap(d=>d.cards).length * 30) : 70;
+        let streak = localStorage.getItem('streak') ? parseInt(localStorage.getItem('streak')) : 2;
+        let weakCards = appState.decks.flatMap(d=>d.cards).filter(c=>c.ease && c.ease<1.8).slice(0,3).map(c=>c.front);
+        if(weakCards.length<3) weakCards = ['Review fundamentals', 'Practice daily', 'Active recall'];
         const html = `
-            <div class="top-bar">
-                <div class="logo">recall.</div>
-                <div class="greeting">Good ${new Date().getHours() < 12 ? 'Morning' : new Date().getHours() < 18 ? 'Afternoon' : 'Evening'}, Maya</div>
-            </div>
-            <div class="hero-section">
-                <div class="hero-title">Ready to review?</div>
-                <div class="due-large">${dueTotal} cards due today</div>
-                <div class="study-time">⏱️ Estimated study time: ${studyTimeEst} minutes</div>
-                <button class="btn-primary-large" id="continueStudyBtn"><i class="fas fa-play"></i> Continue Studying</button>
-            </div>
-            <div class="stats-row">
-                <div class="stat-card"><div class="stat-label">Retention rate</div><div class="stat-number">${retention}%</div></div>
-                <div class="stat-card"><div class="stat-label">Cards mastered</div><div class="stat-number">${mastered}</div></div>
-                <div class="stat-card"><div class="stat-label">Current streak</div><div class="stat-number">${streakVal} days</div></div>
-            </div>
-            <div class="weak-section">
-                <div class="weak-title">📘 You struggle with:</div>
-                <div class="weak-list">
-                    ${weakTopics.map(t => `<span class="weak-tag">${t}</span>`).join('') || '<span class="weak-tag">Keep reviewing, it gets easier</span>'}
+            <div style="max-width: 1000px;">
+                <div style="background:white; border-radius:2rem; padding:2rem; margin-bottom:2rem;">
+                    <h1 style="font-size:2.2rem;">Good ${new Date().getHours()<12?'Morning':'Afternoon'}, Learner</h1>
+                    <div style="font-size:2.8rem; font-weight:700; color:#2563eb; margin:0.5rem 0;">${dueCount} cards due today</div>
+                    <div style="color:#475569;">⏱️ ~${studyMinutes} min study time</div>
+                    <button id="globalStudyBtn" style="margin-top:1.5rem;" class="btn-primary"><i class="fas fa-play"></i> Continue Studying →</button>
                 </div>
-            </div>
-            <div style="margin-top: 2rem;"><h3 style="font-weight: 600;">Recent decks</h3></div>
-            <div class="decks-grid" id="recentDecksGrid">
-                ${appData.decks.map(deck => `
-                    <div class="deck-card" data-deck-id="${deck.id}">
-                        <div class="deck-cover" style="background: ${deck.coverGradient}"></div>
-                        <div class="deck-info">
-                            <div class="deck-name">${deck.name}</div>
-                            <div class="deck-stats"><span>${deck.cards.length} cards</span><span>${Math.floor(deck.cards.filter(c=>c.ease>2.2).length/deck.cards.length*100)||0}% mastered</span></div>
-                            <div class="progress-bar-bg"><div class="progress-fill" style="width: ${Math.floor(deck.cards.filter(c=>c.repetitions>2).length/deck.cards.length*100)}%"></div></div>
-                        </div>
-                    </div>
-                `).join('')}
+                <div style="display:flex; gap:1.5rem; flex-wrap:wrap; margin-bottom:2rem;">
+                    <div style="background:white; border-radius:1.5rem; padding:1.2rem 1.8rem; flex:1;"><div style="color:#64748b;">Retention</div><div style="font-size:2rem; font-weight:700;">${retention}%</div></div>
+                    <div style="background:white; border-radius:1.5rem; padding:1.2rem 1.8rem; flex:1;"><div style="color:#64748b;">Mastered</div><div style="font-size:2rem; font-weight:700;">${mastered}</div></div>
+                    <div style="background:white; border-radius:1.5rem; padding:1.2rem 1.8rem; flex:1;"><div style="color:#64748b;">Streak</div><div style="font-size:2rem; font-weight:700;">${streak} days</div></div>
+                </div>
+                <div style="background:white; border-radius:1.5rem; padding:1.5rem; margin-bottom:2rem;">
+                    <div style="font-weight:600;">📌 Weak areas</div><div style="display:flex; gap:0.8rem; margin-top:0.8rem;">${weakCards.map(w=>`<span style="background:#fee2e2; padding:0.3rem 1rem; border-radius:40px;">${w}</span>`).join('')}</div>
+                </div>
+                <h3>Your decks</h3>
+                <div class="decks-grid" id="homeDecksGrid"></div>
             </div>
         `;
-        document.getElementById('appRoot').innerHTML = html;
-        document.getElementById('continueStudyBtn')?.addEventListener('click', () => startGlobalStudy());
-        document.querySelectorAll('.deck-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                const deckId = card.dataset.deckId;
-                startDeckStudy(deckId);
-            });
-        });
+        document.getElementById('mainView').innerHTML = html;
+        document.getElementById('globalStudyBtn')?.addEventListener('click', startGlobalStudy);
+        renderDecksGridInto('homeDecksGrid', true);
     }
 
     function startGlobalStudy() {
-        // collect all due cards from all decks
-        let dueCardsAll = [];
-        for (let deck of appData.decks) {
-            for (let card of deck.cards) {
-                if (!card.dueDate || card.dueDate <= Date.now()) {
-                    dueCardsAll.push({ ...card, deckId: deck.id, originalCard: card });
-                }
-            }
-        }
-        if (dueCardsAll.length === 0) { alert('No cards due today! Great job.'); return; }
-        studySession.dueCards = dueCardsAll;
-        studySession.currentIndex = 0;
-        studySession.isFlipped = false;
-        currentView = 'study';
-        renderStudyPage();
-    }
-
-    function startDeckStudy(deckId) {
-        const deck = appData.decks.find(d => d.id === deckId);
-        if (!deck) return;
-        let dueCards = deck.cards.filter(c => (!c.dueDate || c.dueDate <= Date.now()));
-        if (dueCards.length === 0) { alert('No cards due in this deck. Choose another.'); return; }
-        studySession.dueCards = dueCards.map(c => ({ ...c, deckId, originalCard: c }));
-        studySession.currentIndex = 0;
-        studySession.isFlipped = false;
-        currentView = 'study';
+        let due = getDueCards();
+        if(due.length===0) { showToast('No cards due! 🎉'); return; }
+        studySession.cards = due;
+        studySession.index = 0;
+        studySession.flipped = false;
+        currentNav = 'study';
         renderStudyPage();
     }
 
     function renderStudyPage() {
-        const cards = studySession.dueCards;
-        if (!cards.length || studySession.currentIndex >= cards.length) {
-            // session end
-            alert('Session complete! 🎉 Come back tomorrow.');
-            currentView = 'home';
+        if(studySession.index >= studySession.cards.length) {
+            showToast('Session complete! Great job.');
+            currentNav = 'home';
             renderHome();
             return;
         }
-        const cardItem = cards[studySession.currentIndex];
-        const card = cardItem.originalCard;
-        const total = cards.length;
-        const idx = studySession.currentIndex + 1;
-        const isFlipped = studySession.isFlipped;
-
-        const html = `
+        let card = studySession.cards[studySession.index];
+        let flipped = studySession.flipped;
+        let html = `
             <div class="study-container">
-                <div class="study-progress">${idx} of ${total} · <span id="nextIntervalHint"></span></div>
-                <div class="flashcard-3d" id="flashcard3d">
-                    <div class="card-side-label">${isFlipped ? 'ANSWER' : 'QUESTION'}</div>
-                    <div class="card-text" id="cardMainText">${isFlipped ? card.back : card.front}</div>
+                <div style="text-align:center; color:#475569;">${studySession.index+1} / ${studySession.cards.length}</div>
+                <div class="flashcard-3d" id="flashcardArea">
+                    <div style="font-size:0.75rem; color:#2563eb;">${flipped ? 'ANSWER' : 'QUESTION'}</div>
+                    <div style="font-size:1.8rem; font-weight:500; margin-top:1rem;">${flipped ? card.back : card.front}</div>
                 </div>
                 <div id="actionArea">
-                    <button class="reveal-btn" id="revealBtn">⟳ Reveal answer</button>
+                    <button id="revealStudyBtn" class="btn-primary" style="background:#1e293b;">↺ Reveal answer</button>
                 </div>
-                <div class="rating-buttons" id="ratingGroup" style="display: none;">
-                    <button class="rating-btn" data-rating="0">Again <small>10 min</small></button>
-                    <button class="rating-btn" data-rating="1">Hard <small>1 day</small></button>
-                    <button class="rating-btn" data-rating="2">Good <small>5 days</small></button>
-                    <button class="rating-btn" data-rating="3">Easy <small>14 days</small></button>
+                <div id="ratingsArea" style="display:none;" class="rating-buttons">
+                    <button class="rating-btn" data-rating="0">Again <small>10min</small></button>
+                    <button class="rating-btn" data-rating="1">Hard <small>1d</small></button>
+                    <button class="rating-btn" data-rating="2">Good <small>5d</small></button>
+                    <button class="rating-btn" data-rating="3">Easy <small>14d</small></button>
                 </div>
-                <div class="back-link" id="backToHomeBtn">← Back to home</div>
+                <button id="backHomeStudy" style="margin-top:2rem; background:none; border:none; color:#2563eb; cursor:pointer;">← Back home</button>
             </div>
         `;
-        document.getElementById('appRoot').innerHTML = html;
-
-        // show interval preview
-        const updateIntervalPreview = (rating) => {
-            let intervalText = '';
-            if (rating === 0) intervalText = '10 min';
-            else if (rating === 1) intervalText = '1 day';
-            else if (rating === 2) intervalText = '5 days';
-            else intervalText = '14 days';
-            document.getElementById('nextIntervalHint').innerText = `Next review: ${intervalText}`;
-        };
-
-        document.getElementById('revealBtn')?.addEventListener('click', () => {
-            studySession.isFlipped = true;
-            renderStudyPage(); // re-render to show back
+        document.getElementById('mainView').innerHTML = html;
+        document.getElementById('revealStudyBtn')?.addEventListener('click', () => {
+            studySession.flipped = true;
+            renderStudyPage();
         });
-        document.getElementById('backToHomeBtn')?.addEventListener('click', () => { currentView = 'home'; renderHome(); });
-
-        if (isFlipped) {
+        document.getElementById('backHomeStudy')?.addEventListener('click', () => { currentNav = 'home'; renderHome(); });
+        if(flipped) {
             document.getElementById('actionArea').innerHTML = '';
-            const ratingDiv = document.getElementById('ratingGroup');
-            ratingDiv.style.display = 'flex';
+            let ratingsDiv = document.getElementById('ratingsArea');
+            ratingsDiv.style.display = 'flex';
             document.querySelectorAll('.rating-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    const ratingVal = parseInt(btn.dataset.rating);
-                    const intervalDays = updateCardSM2(card, ratingVal);
-                    // update streak (simple)
-                    let streak = localStorage.getItem('recall_streak') ? parseInt(localStorage.getItem('recall_streak')) : 0;
+                    let rating = parseInt(btn.dataset.rating);
+                    let originalCard = studySession.cards[studySession.index];
+                    let deck = appState.decks.find(d => d.id === originalCard.deckId);
+                    let realCard = deck.cards.find(c => c.id === originalCard.id);
+                    if(realCard) updateCard(realCard, rating);
+                    // update streak
+                    let streak = parseInt(localStorage.getItem('streak') || '1');
+                    let last = localStorage.getItem('lastStudy');
                     let today = new Date().toDateString();
-                    let last = localStorage.getItem('last_study_date');
-                    if (last === today) { /* already counted */ } 
-                    else if (last && new Date(last).getTime() + 86400000 >= new Date().getTime()) streak++;
-                    else streak = 1;
-                    localStorage.setItem('recall_streak', streak);
-                    localStorage.setItem('last_study_date', today);
-                    // move to next card
-                    studySession.currentIndex++;
-                    studySession.isFlipped = false;
+                    if(last !== today) { streak = last ? streak+1 : 1; localStorage.setItem('streak', streak); localStorage.setItem('lastStudy', today); }
+                    studySession.index++;
+                    studySession.flipped = false;
                     renderStudyPage();
                 });
-            });
-            // show interval preview on hover
-            document.querySelectorAll('.rating-btn').forEach(btn => {
-                btn.addEventListener('mouseenter', () => { updateIntervalPreview(parseInt(btn.dataset.rating)); });
             });
         }
     }
 
-    // routing
-    function route() {
-        if (currentView === 'home') renderHome();
-        else if (currentView === 'study') renderStudyPage();
+    function renderDecksManager() {
+        let foldersMap = new Map();
+        appState.folders.forEach(f => foldersMap.set(f.id, f.name));
+        let html = `<div class="decks-header"><h2>📚 Decks & Folders</h2><div><button id="newFolderBtn" class="btn-secondary"><i class="fas fa-folder"></i> Folder</button> <button id="newDeckManagerBtn" class="btn-primary"><i class="fas fa-plus"></i> Deck</button></div></div>`;
+        // render folders
+        for(let folder of appState.folders) {
+            let folderDecks = appState.decks.filter(d => d.folderId === folder.id);
+            html += `<div class="folder-group"><div class="folder-title"><i class="fas fa-folder-open"></i> ${folder.name}</div><div class="decks-grid" id="folder-${folder.id}"></div></div>`;
+        }
+        let uncategorized = appState.decks.filter(d => !d.folderId);
+        if(uncategorized.length || true) html += `<div class="folder-group"><div class="folder-title"><i class="fas fa-inbox"></i> Uncategorized</div><div class="decks-grid" id="uncategorizedGrid"></div></div>`;
+        document.getElementById('mainView').innerHTML = html;
+        for(let folder of appState.folders) renderDecksGridInto(`folder-${folder.id}`, false, folder.id);
+        renderDecksGridInto(`uncategorizedGrid`, false, null);
+        document.getElementById('newFolderBtn')?.addEventListener('click', () => { let name = prompt('Folder name'); if(name) { appState.folders.push({ id: Date.now()+'', name }); saveFull(); renderDecksManager(); showToast('Folder added'); } });
+        document.getElementById('newDeckManagerBtn')?.addEventListener('click', () => openDeckModal());
     }
 
-    loadData();
-    // compute streak and render
-    if (!localStorage.getItem('recall_streak')) localStorage.setItem('recall_streak', '2');
-    route();
+    function openDeckModal(deckId=null) {
+        let modalDiv = document.createElement('div'); modalDiv.className = 'modal';
+        modalDiv.innerHTML = `<div class="modal-card"><h3>${deckId?'Edit Deck':'New Deck'}</h3><input id="deckNameInput" class="input-field" placeholder="Deck name"><select id="folderSelect" class="input-field"><option value="">No folder</option>${appState.folders.map(f=>`<option value="${f.id}">${f.name}</option>`).join('')}</select><div style="display:flex; gap:12px; margin-top:1rem;"><button id="saveDeckModalBtn" class="btn-primary">Save</button><button id="closeModalBtn">Cancel</button></div></div>`;
+        document.body.appendChild(modalDiv);
+        document.getElementById('saveDeckModalBtn').onclick = () => {
+            let name = document.getElementById('deckNameInput').value;
+            let folderId = document.getElementById('folderSelect').value || null;
+            if(name) {
+                if(!deckId) appState.decks.push({ id: Date.now()+'', name, folderId, coverGradient: 'linear-gradient(145deg,#3b82f6,#a855f7)', cards: [] });
+                else { let d = appState.decks.find(d=>d.id===deckId); if(d) { d.name = name; d.folderId = folderId; } }
+                saveFull(); renderDecksManager(); showToast('Deck saved');
+                modalDiv.remove();
+            }
+        };
+        document.getElementById('closeModalBtn').onclick = () => modalDiv.remove();
+    }
+
+    function renderDecksGridInto(containerId, clickToStudy=false, filterFolder=null) {
+        let container = document.getElementById(containerId);
+        if(!container) return;
+        let decksToShow = filterFolder !== undefined ? appState.decks.filter(d => d.folderId === filterFolder) : appState.decks;
+        container.innerHTML = decksToShow.map(deck => `
+            <div class="deck-card" data-deck-id="${deck.id}">
+                <div class="deck-cover" style="background:${deck.coverGradient}"></div>
+                <div class="deck-info">
+                    <div class="deck-name">${deck.name}</div>
+                    <div>${deck.cards.length} cards · ${deck.cards.filter(c=>c.dueDate<=Date.now()).length} due</div>
+                    <div class="progress-bar"><div class="progress-fill" style="width:${Math.floor(deck.cards.filter(c=>c.repetitions>2).length/deck.cards.length*100)||0}%"></div></div>
+                    <div style="display:flex; gap:8px; margin-top:12px;"><button class="studyDeckBtn" data-id="${deck.id}" style="background:#2563eb; color:white; border:none; border-radius:30px; padding:6px 14px;">Study</button> <button class="editDeckBtn" data-id="${deck.id}" style="background:#e2e8f0; border:none; border-radius:30px;">Edit</button> <button class="deleteDeckBtn" data-id="${deck.id}" style="background:#fee2e2;">Delete</button></div>
+                </div>
+            </div>
+        `).join('');
+        document.querySelectorAll('.studyDeckBtn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); startDeckStudy(btn.dataset.id); }));
+        document.querySelectorAll('.editDeckBtn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); openDeckModal(btn.dataset.id); }));
+        document.querySelectorAll('.deleteDeckBtn').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); if(confirm('Delete deck?')) { appState.decks = appState.decks.filter(d => d.id !== btn.dataset.id); saveFull(); renderDecksManager(); showToast('Deleted'); } }));
+        if(clickToStudy) document.querySelectorAll('.deck-card').forEach(card => card.addEventListener('click', (e) => { if(!e.target.closest('button')) startDeckStudy(card.dataset.deckId); }));
+    }
+
+    function startDeckStudy(deckId) {
+        let deck = appState.decks.find(d=>d.id===deckId);
+        if(!deck) return;
+        let due = deck.cards.filter(c=> (!c.dueDate || c.dueDate <= Date.now()));
+        if(due.length===0) { showToast('No cards due in this deck'); return; }
+        studySession.cards = due.map(c => ({...c, deckId: deck.id, deckName: deck.name}));
+        studySession.index = 0;
+        studySession.flipped = false;
+        currentNav = 'study';
+        renderStudyPage();
+    }
+
+    function renderCardManager() {
+        let allCards = [];
+        for(let deck of appState.decks) {
+            for(let card of deck.cards) {
+                allCards.push({...card, deckName: deck.name, deckId: deck.id});
+            }
+        }
+        let html = `<div class="decks-header"><h2>📇 Card Manager</h2><button id="bulkCardBtn" class="btn-primary"><i class="fas fa-plus"></i> New Card</button></div><div class="decks-grid" id="cardsManagerGrid"></div>`;
+        document.getElementById('mainView').innerHTML = html;
+        let grid = document.getElementById('cardsManagerGrid');
+        grid.innerHTML = allCards.map(card => `
+            <div class="deck-card" style="padding:1rem;">
+                <div><strong>${card.front}</strong> → ${card.back}</div>
+                <div style="font-size:0.75rem; color:#475569;">📘 ${card.deckName}</div>
+                <button class="deleteCardBtn" data-deck="${card.deckId}" data-cardid="${card.id}" style="margin-top:8px;">Delete</button>
+            </div>
+        `).join('');
+        document.getElementById('bulkCardBtn')?.addEventListener('click', () => {
+            let deckId = prompt('Deck ID? (type deck name)'); let deck = appState.decks.find(d=>d.name.toLowerCase().includes(deckId?.toLowerCase()));
+            if(deck) { let front = prompt('Front'); let back = prompt('Back'); if(front&&back) { deck.cards.push({ id: Date.now()+'', front, back, repetitions:0, ease:2.5, interval:0, dueDate: Date.now() }); saveFull(); renderCardManager(); showToast('Card added'); } }
+        });
+        document.querySelectorAll('.deleteCardBtn').forEach(btn => btn.addEventListener('click', () => {
+            let deck = appState.decks.find(d=>d.id===btn.dataset.deck);
+            if(deck) { deck.cards = deck.cards.filter(c=>c.id !== btn.dataset.cardid); saveFull(); renderCardManager(); showToast('Card removed'); }
+        }));
+    }
+
+    function renderStats() {
+        let totalCards = appState.decks.flatMap(d=>d.cards).length;
+        let mastered = appState.decks.flatMap(d=>d.cards).filter(c=>c.repetitions>=4).length;
+        let accuracy = 78;
+        let html = `<div style="background:white; border-radius:2rem; padding:2rem;"><h2>📈 Learning Progress</h2><div style="display:flex; gap:2rem; margin:2rem 0;"><div>📊 Retention: ${accuracy}%</div><div>🏆 Mastered: ${mastered}</div><div>📚 Total cards: ${totalCards}</div></div><div class="progress-bar" style="width:100%"><div class="progress-fill" style="width:${Math.floor(mastered/totalCards*100)||0}%"></div></div><p style="margin-top:1rem;">Keep reviewing daily to strengthen memory.</p></div>`;
+        document.getElementById('mainView').innerHTML = html;
+    }
+
+    function showToast(msg) { let t=document.getElementById('toastMsg'); t.innerHTML='✔️ '+msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }
+
+    function initRouting() {
+        document.querySelectorAll('.nav-item').forEach(nav => {
+            nav.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+                nav.classList.add('active');
+                let navId = nav.dataset.nav;
+                if(navId === 'home') { currentNav='home'; renderHome(); }
+                else if(navId === 'decks') { currentNav='decks'; renderDecksManager(); }
+                else if(navId === 'cards') { currentNav='cards'; renderCardManager(); }
+                else if(navId === 'stats') { currentNav='stats'; renderStats(); }
+            });
+        });
+        document.getElementById('createDeckSidebarBtn')?.addEventListener('click', () => openDeckModal());
+    }
+
+    loadFull();
+    initRouting();
+    renderHome();
 </script>
 </body>
 </html>
