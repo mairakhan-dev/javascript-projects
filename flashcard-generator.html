@@ -3,430 +3,517 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Flashcard Studio | Multi-Set & Bulk Manager</title>
+    <title>FlashForge Pro | AI-Powered Flashcard Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 10% 20%, rgba(15, 25, 45, 1) 0%, rgba(5, 10, 25, 1) 100%);
             min-height: 100vh;
-            padding: 24px 20px;
+            padding: 28px 24px;
+            color: #f0f3fa;
         }
 
-        .app-wrapper {
-            max-width: 1400px;
+        /* animated background */
+        .bg-glow {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+            background: radial-gradient(circle at 50% 30%, rgba(99, 102, 241, 0.15), transparent 70%);
+        }
+
+        .app-container {
+            max-width: 1440px;
             margin: 0 auto;
         }
 
-        /* header + set selector area */
-        .global-header {
+        /* header area with glass effect */
+        .hero-bar {
+            background: rgba(15, 25, 45, 0.65);
+            backdrop-filter: blur(16px);
+            border-radius: 3rem;
+            padding: 1rem 2rem;
+            margin-bottom: 2rem;
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 28px;
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 40px;
-            padding: 12px 24px;
-            border: 1px solid rgba(255,255,255,0.1);
+            gap: 1rem;
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
         }
 
-        .title-badge h1 {
+        .logo-area h1 {
             font-size: 1.8rem;
-            background: linear-gradient(135deg, #c084fc, #60a5fa);
+            font-weight: 800;
+            background: linear-gradient(135deg, #c084fc, #60a5fa, #34d399);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             letter-spacing: -0.3px;
         }
 
-        .set-selector {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
+        .logo-area p {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            letter-spacing: 0.5px;
         }
 
-        .set-dropdown {
-            background: #1e293b;
+        .set-manager {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .set-selector {
+            background: #0f172acc;
             border: 1px solid #334155;
-            padding: 10px 18px;
-            border-radius: 60px;
+            border-radius: 2rem;
+            padding: 0.6rem 1.2rem;
             color: white;
             font-weight: 500;
             cursor: pointer;
-            font-size: 0.95rem;
-            min-width: 180px;
+            backdrop-filter: blur(4px);
+            font-size: 0.9rem;
         }
 
-        .new-set-btn, .delete-set-btn {
-            background: #2d3a4e;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 40px;
+        .glass-btn {
+            background: rgba(51, 65, 85, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(129, 140, 248, 0.5);
+            padding: 0.6rem 1.3rem;
+            border-radius: 2rem;
             color: white;
             font-weight: 600;
-            cursor: pointer;
             transition: all 0.2s ease;
+            cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 8px;
             font-size: 0.85rem;
         }
 
-        .new-set-btn { background: #3b82f6; }
-        .new-set-btn:hover { background: #2563eb; transform: scale(0.97);}
-        .delete-set-btn { background: #ef4444; }
-        .delete-set-btn:hover { background: #dc2626; }
+        .glass-btn-primary {
+            background: linear-gradient(105deg, #4f46e5, #7c3aed);
+            border: none;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
 
-        /* Main card container */
-        .main-panel {
-            background: #0f172aee;
-            backdrop-filter: blur(4px);
-            border-radius: 32px;
-            border: 1px solid #334155;
+        .glass-btn-danger {
+            background: rgba(220, 38, 38, 0.8);
+            border-color: #ef4444;
+        }
+
+        /* main card panel */
+        .dashboard-card {
+            background: rgba(10, 20, 35, 0.65);
+            backdrop-filter: blur(20px);
+            border-radius: 2.5rem;
+            border: 1px solid rgba(71, 85, 105, 0.5);
             overflow: hidden;
-            box-shadow: 0 25px 40px -12px black;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s;
         }
 
         .tabs {
             display: flex;
             flex-wrap: wrap;
-            background: #0a0f1c;
-            border-bottom: 1px solid #2d3a4e;
-            gap: 4px;
-            padding: 0 16px;
+            background: rgba(0, 0, 0, 0.3);
+            gap: 6px;
+            padding: 0 1.5rem;
+            border-bottom: 1px solid #2d3a5e;
         }
-        .tab {
-            padding: 16px 24px;
+
+        .tab-btn {
             background: transparent;
             border: none;
+            padding: 1rem 1.8rem;
             font-weight: 600;
             color: #94a3b8;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: 0.2s;
-            font-size: 0.95rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .tab:hover { color: #cbd5e1; background: #1e293b; border-radius: 20px 20px 0 0; }
-        .tab.active {
-            color: white;
-            border-bottom: 3px solid #818cf8;
-            background: #1e293b;
-            border-radius: 16px 16px 0 0;
-        }
-
-        .tab-content { display: none; padding: 28px; animation: fade 0.25s ease; }
-        .tab-content.active { display: block; }
-
-        @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
-
-        /* bulk import area */
-        .bulk-zone {
-            background: #1e293b;
-            border-radius: 28px;
-            padding: 24px;
-            margin-bottom: 32px;
-            border: 1px solid #334155;
-        }
-        .bulk-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #e2e8f0;
-            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
+            border-radius: 2rem 2rem 0 0;
         }
-        .bulk-hint {
-            background: #2d3a4e;
-            padding: 14px;
-            border-radius: 18px;
-            font-size: 0.85rem;
-            color: #a5f3fc;
-            margin-bottom: 18px;
-            font-family: monospace;
+
+        .tab-btn i { font-size: 1.1rem; }
+        .tab-btn:hover { color: #e2e8f0; background: #1e2a44; }
+        .tab-btn.active {
+            color: white;
+            background: linear-gradient(0deg, #1e293b, transparent);
+            border-bottom: 3px solid #818cf8;
         }
-        .bulk-textarea {
+
+        .tab-pane {
+            display: none;
+            padding: 2rem;
+            animation: fadeSlide 0.35s ease;
+        }
+
+        .tab-pane.active { display: block; }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* bulk import zone */
+        .premium-card {
+            background: #0f172a80;
+            border-radius: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #2d3a5e;
+            margin-bottom: 1.8rem;
+        }
+
+        .bulk-text {
             width: 100%;
-            background: #0f172a;
-            border: 1px solid #475569;
-            border-radius: 20px;
-            padding: 16px;
-            color: #f1f5f9;
+            background: #020617cc;
+            border: 1px solid #334155;
+            border-radius: 1.5rem;
+            padding: 1rem;
+            color: #e2e8f0;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
             resize: vertical;
-            margin-bottom: 18px;
+            margin: 1rem 0;
         }
-        .btn-group {
+
+        .flex-group {
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
-            margin-top: 10px;
+            margin-top: 0.8rem;
         }
-        .btn-primary { background: #818cf8; color: #0f172a; border: none; }
-        .btn-secondary { background: #334155; color: #e2e8f0; border: none; }
-        .btn-danger { background: #b91c1c; color: white; }
-        button {
-            padding: 10px 22px;
-            border-radius: 40px;
+
+        .input-modern {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 2rem;
+            padding: 0.8rem 1.2rem;
+            color: white;
+            flex: 1;
+        }
+
+        .btn {
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 2rem;
             font-weight: 600;
+            transition: 0.15s;
             cursor: pointer;
-            transition: all 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 8px;
         }
-        button:active { transform: scale(0.97); }
+
+        .btn-primary { background: #4f46e5; color: white; box-shadow: 0 2px 8px #4f46e580; }
+        .btn-secondary { background: #334155; color: #e2e8f0; }
+        .btn-outline { background: transparent; border: 1px solid #5b6e8c; color: #cbd5e1; }
 
         .flashcards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-            gap: 18px;
-            margin-top: 24px;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 1.4rem;
+            margin-top: 1.5rem;
         }
-        .flashcard {
-            background: #1e293b;
-            border-radius: 24px;
-            padding: 22px 18px;
+
+        .flashcard-card {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: 1.8rem;
+            padding: 1.5rem;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.25s ease;
             border: 1px solid #334155;
-            min-height: 160px;
+            position: relative;
+            min-height: 180px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            box-shadow: 0 6px 12px -6px rgba(0,0,0,0.4);
-        }
-        .flashcard.flipped { background: linear-gradient(135deg, #2e3a5e, #1e2a44); border-color: #818cf8; }
-        .flashcard-content { font-size: 1.1rem; line-height: 1.4; text-align: center; color: #f1f5f9; }
-        .flashcard-number { background: #0f172a; width: 32px; height: 32px; border-radius: 40px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem; margin-bottom: 12px; color: #a5b4fc; }
-        .delete-card-btn {
-            margin-top: 14px;
-            background: #334155;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            width: fit-content;
-            align-self: center;
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.3);
         }
 
-        .study-card { background: #1e293b; border-radius: 32px; padding: 48px 20px; text-align: center; margin-bottom: 30px; }
-        .stats-row { display: flex; justify-content: space-between; margin-top: 16px; color: #94a3b8; }
-        .notification {
-            position: fixed; bottom: 24px; right: 24px; background: #22c55e; color: #020617; padding: 12px 24px;
-            border-radius: 60px; font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.3); transform: translateY(120px);
-            transition: 0.2s; z-index: 1000;
+        .flashcard-card:hover { transform: translateY(-5px); border-color: #818cf8; box-shadow: 0 20px 30px -12px #4f46e540; }
+        .flipped-card { background: linear-gradient(135deg, #2e3a5e, #1f2a46); border-color: #a5b4fc; }
+
+        .card-index {
+            background: #0f172a;
+            width: 32px;
+            height: 32px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            margin-bottom: 12px;
         }
-        .notification.show { transform: translateY(0); }
-        .quick-stats { background: #0f172a; border-radius: 18px; padding: 18px; margin-top: 20px; }
-        @media (max-width: 720px) { .tab { padding: 12px 14px; font-size: 0.8rem; } .tab-content { padding: 18px; } }
+
+        .study-panel {
+            background: linear-gradient(125deg, #0f172a, #111827);
+            border-radius: 2rem;
+            padding: 2.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .progress-glass {
+            background: #1e293b;
+            height: 8px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill-glow {
+            background: linear-gradient(90deg, #818cf8, #c084fc);
+            width: 0%;
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.25s;
+        }
+
+        .stats-badge {
+            background: #0f172a80;
+            border-radius: 2rem;
+            padding: 0.3rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .notification-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #10b981;
+            color: #020617;
+            padding: 0.8rem 1.8rem;
+            border-radius: 3rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            transform: translateY(120px);
+            transition: 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            z-index: 2000;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .toast-show { transform: translateY(0); }
+        @media (max-width: 700px) { .tab-btn { padding: 0.8rem 1rem; } .hero-bar { flex-direction: column; align-items: stretch; } }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<div class="app-wrapper">
-    <div class="global-header">
-        <div class="title-badge"><h1><i class="fas fa-bolt"></i> FlashForge • Multi-Set</h1></div>
-        <div class="set-selector">
-            <select id="setSelectDropdown" class="set-dropdown"></select>
-            <button id="createNewSetBtn" class="new-set-btn"><i class="fas fa-plus-circle"></i> New Set</button>
-            <button id="deleteCurrentSetBtn" class="delete-set-btn"><i class="fas fa-trash-alt"></i> Delete Set</button>
+<div class="bg-glow"></div>
+<div class="app-container">
+    <div class="hero-bar">
+        <div class="logo-area">
+            <h1><i class="fas fa-bolt"></i> FlashForge Pro</h1>
+            <p>AI-ready • Multi-set engine • Lightning bulk</p>
+        </div>
+        <div class="set-manager">
+            <select id="setSelector" class="set-selector"></select>
+            <button id="newSetBtn" class="glass-btn"><i class="fas fa-plus-circle"></i> New Set</button>
+            <button id="deleteSetBtn" class="glass-btn glass-btn-danger"><i class="fas fa-trash"></i> Delete</button>
         </div>
     </div>
-    <div class="main-panel">
+
+    <div class="dashboard-card">
         <div class="tabs">
-            <button class="tab active" data-tab="bulkTab"><i class="fas fa-layer-group"></i> Bulk + Create</button>
-            <button class="tab" data-tab="listTab"><i class="fas fa-list-ul"></i> Cards</button>
-            <button class="tab" data-tab="studyTab"><i class="fas fa-brain"></i> Study</button>
-            <button class="tab" data-tab="exportTab"><i class="fas fa-file-export"></i> Export/Backup</button>
+            <button class="tab-btn active" data-tab="bulk"><i class="fas fa-rocket"></i> Bulk Forge</button>
+            <button class="tab-btn" data-tab="cards"><i class="fas fa-layer-group"></i> Collection</button>
+            <button class="tab-btn" data-tab="study"><i class="fas fa-brain"></i> Smart Study</button>
+            <button class="tab-btn" data-tab="insights"><i class="fas fa-chart-line"></i> Stats & Export</button>
         </div>
 
-        <!-- BULK & QUICK ADD TAB -->
-        <div id="bulkTab" class="tab-content active">
-            <div class="bulk-zone">
-                <div class="bulk-title"><i class="fas fa-database"></i> ⚡ Bulk Import (Super fast)</div>
-                <div class="bulk-hint">
-                    <i class="fas fa-lightbulb"></i> Format: <strong>front | back</strong>  (one per line)<br>
-                    Example: <code>Photosynthesis | Plants convert light into energy</code><br>
-                    You can paste dozens of lines – instant creation.
-                </div>
-                <textarea id="bulkTextArea" rows="6" class="bulk-textarea" placeholder="JavaScript | High-level language for web&#10;React | UI library&#10;Python | Versatile programming language"></textarea>
-                <div class="btn-group">
-                    <button id="bulkAddBtn" class="btn-primary"><i class="fas fa-rocket"></i> Bulk Add (Fast)</button>
-                    <button id="clearBulkBtn" class="btn-secondary"><i class="fas fa-eraser"></i> Clear Field</button>
+        <!-- BULK PANE -->
+        <div id="bulk" class="tab-pane active">
+            <div class="premium-card">
+                <h3><i class="fas fa-database"></i> ⚡ Bulk Import (Paste thousands)</h3>
+                <div class="stats-badge" style="margin: 0.5rem 0;">Format: <code>Term | Definition</code> (one per line)</div>
+                <textarea id="bulkInput" rows="5" class="bulk-text" placeholder="JavaScript | High-level, just-in-time compiled language&#10;React | Library for UI components&#10;Closure | Function with preserved scope"></textarea>
+                <div class="flex-group">
+                    <button id="bulkAddAction" class="btn btn-primary"><i class="fas fa-bolt"></i> Instant Bulk (Fast)</button>
+                    <button id="clearBulkField" class="btn btn-secondary"><i class="fas fa-eraser"></i> Clear</button>
                 </div>
             </div>
-            <div class="quick-add" style="background:#1e293b; border-radius:28px; padding:20px;">
-                <h3 style="color:#e2e8f0;"><i class="fas fa-pen-alt"></i> Single Card Quick Add</h3>
-                <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:12px;">
-                    <input type="text" id="quickFront" placeholder="Front (term)" style="flex:2; background:#0f172a; border:1px solid #475569; padding:12px; border-radius:40px; color:white;">
-                    <input type="text" id="quickBack" placeholder="Back (definition)" style="flex:2; background:#0f172a; border:1px solid #475569; padding:12px; border-radius:40px; color:white;">
-                    <button id="quickAddBtn" class="btn-primary"><i class="fas fa-plus"></i> Add Card</button>
+            <div class="premium-card">
+                <h3><i class="fas fa-plus-circle"></i> Quick Card Creator</h3>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px;">
+                    <input type="text" id="quickFront" placeholder="Front / Term" class="input-modern">
+                    <input type="text" id="quickBack" placeholder="Back / Definition" class="input-modern">
+                    <button id="quickAddSingle" class="btn btn-primary"><i class="fas fa-plus"></i> Add Card</button>
                 </div>
             </div>
-            <div class="quick-stats">
-                <div><i class="fas fa-chart-simple"></i> <strong id="setNameDisplay"></strong> — <span id="totalCardsStat">0</span> cards in this set</div>
-            </div>
+            <div class="stats-badge" style="display: inline-block;"><i class="fas fa-chart-simple"></i> <span id="liveTotalCards">0</span> cards in <span id="currentSetNameSpan">—</span></div>
         </div>
 
-        <!-- MY CARDS TAB -->
-        <div id="listTab" class="tab-content">
-            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; margin-bottom:20px;">
-                <h2 style="color:#e2e8f0;"><i class="fas fa-cards"></i> Cards in current set</h2>
-                <div><button id="shuffleCardsBtn" class="btn-secondary"><i class="fas fa-random"></i> Shuffle</button></div>
+        <!-- COLLECTION PANE -->
+        <div id="cards" class="tab-pane">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 1rem;">
+                <h2><i class="fas fa-cards"></i> My Flashcards</h2>
+                <button id="shuffleCollectionBtn" class="btn btn-secondary"><i class="fas fa-random"></i> Shuffle Deck</button>
             </div>
-            <div id="allCardsContainer" class="flashcards-grid"></div>
+            <div id="cardsGridContainer" class="flashcards-grid"></div>
         </div>
 
         <!-- STUDY MODE -->
-        <div id="studyTab" class="tab-content">
-            <div class="study-container" style="text-align:center;">
-                <div class="study-card" id="studyCardBox">
-                    <div id="studySideLabel" style="color:#a5b4fc; letter-spacing:1px;">FRONT</div>
-                    <div id="studyMainText" style="font-size:1.9rem; margin:25px 0; font-weight:500;">Ready to study?</div>
-                    <button id="flipStudyBtn" class="btn-primary" style="display:none;"><i class="fas fa-exchange-alt"></i> Flip</button>
-                </div>
-                <div class="progress-bar" style="background:#2d3a4e; height:8px; border-radius:10px; margin:20px 0;"><div id="studyProgressFill" style="width:0%; height:100%; background:#818cf8; border-radius:10px;"></div></div>
-                <div class="stats-row"><span id="cardCounter">0 / 0</span><span id="sideHint"></span></div>
-                <div class="btn-group" style="justify-content:center; margin-top:25px;">
-                    <button id="studyPrevBtn" class="btn-secondary"><i class="fas fa-chevron-left"></i> Prev</button>
-                    <button id="startStudySession" class="btn-primary"><i class="fas fa-play"></i> Start</button>
-                    <button id="studyNextBtn" class="btn-secondary">Next <i class="fas fa-chevron-right"></i></button>
-                </div>
+        <div id="study" class="tab-pane">
+            <div class="study-panel" id="studyPanel">
+                <div style="font-size: 0.8rem; letter-spacing: 2px; color: #a5b4fc;" id="studySideLabel">FRONT SIDE</div>
+                <div style="font-size: 2rem; font-weight: 600; margin: 28px 0; line-height: 1.3;" id="studyMainText">Ready to master?</div>
+                <button id="flipStudyAction" class="btn btn-primary" style="display: none;"><i class="fas fa-sync-alt"></i> Flip</button>
+            </div>
+            <div class="progress-glass"><div id="studyProgressFill" class="progress-fill-glow"></div></div>
+            <div class="flex-group" style="justify-content: center;">
+                <span id="studyCounter" class="stats-badge">0 / 0</span>
+                <button id="studyPrevBtn" class="btn btn-secondary"><i class="fas fa-chevron-left"></i> Prev</button>
+                <button id="studyStartBtn" class="btn btn-primary"><i class="fas fa-play"></i> Start Session</button>
+                <button id="studyNextBtn" class="btn btn-secondary">Next <i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
 
-        <!-- EXPORT / IMPORT BACKUP -->
-        <div id="exportTab" class="tab-content">
-            <h3 style="color:white;"><i class="fas fa-archive"></i> Export entire set or import JSON backup</h3>
-            <div class="btn-group" style="margin:20px 0;">
-                <button id="exportJSONBtnSet" class="btn-primary"><i class="fas fa-code"></i> Export as JSON</button>
-                <button id="exportCSVSetBtn" class="btn-secondary"><i class="fas fa-table"></i> Export CSV</button>
-                <button id="printSetBtn" class="btn-secondary"><i class="fas fa-print"></i> Print</button>
+        <!-- STATS & EXPORT -->
+        <div id="insights" class="tab-pane">
+            <div class="premium-card">
+                <h3><i class="fas fa-chart-pie"></i> Set Analytics</h3>
+                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0;">
+                    <div><i class="fas fa-cube"></i> Total cards: <strong id="statsTotalCards">0</strong></div>
+                    <div><i class="fas fa-calendar"></i> Last updated: <span id="lastUpdatedMeta">—</span></div>
+                </div>
+                <div class="flex-group">
+                    <button id="exportJsonBtn" class="btn btn-primary"><i class="fab fa-js"></i> Export JSON</button>
+                    <button id="exportCsvBtn" class="btn btn-secondary"><i class="fas fa-file-csv"></i> Export CSV</button>
+                    <button id="printFlashcardsBtn" class="btn btn-outline"><i class="fas fa-print"></i> Print</button>
+                </div>
+                <div style="margin-top: 24px;">
+                    <label><i class="fas fa-upload"></i> Restore Backup (JSON)</label>
+                    <input type="file" id="restoreFileInput" accept=".json" style="margin: 8px 0; background: #1e293b; border-radius: 20px;">
+                    <button id="importBackupBtn" class="btn btn-secondary"><i class="fas fa-cloud-upload-alt"></i> Import & Replace Set</button>
+                </div>
             </div>
-            <div style="background:#1e293b; border-radius:28px; padding:20px; margin-top:20px;">
-                <h4 style="color:#cbd5e1;"><i class="fas fa-upload"></i> Restore / Import JSON backup</h4>
-                <input type="file" id="jsonUploadInput" accept=".json" style="margin:12px 0; color:white;">
-                <button id="importJsonSetBtn" class="btn-primary"><i class="fas fa-cloud-upload-alt"></i> Replace current set</button>
-                <p style="font-size:0.8rem; color:#94a3b8; margin-top:8px;">⚠️ replaces all cards in active set</p>
+            <div class="premium-card">
+                <h4><i class="fas fa-code"></i> Live Export Preview</h4>
+                <textarea id="exportPreviewText" rows="4" class="bulk-text" readonly style="font-family: monospace;"></textarea>
             </div>
-            <div class="quick-stats"><textarea id="exportPreviewArea" rows="5" readonly style="width:100%; background:#0f172a; border-radius:18px; padding:12px; color:#94a3b8;"></textarea></div>
         </div>
     </div>
 </div>
-<div id="notificationToast" class="notification"><i class="fas fa-check-circle"></i> Done</div>
+<div id="globalToast" class="notification-toast"><i class="fas fa-check-circle"></i> Action completed</div>
 
 <script>
-    // ---------- MULTI-SET DATA STRUCTURE (fast & efficient) ----------
-    let sets = new Map();  // key: setID (string), value: { name, cards: [] }
-    let currentSetId = null;
-    let studyState = { active: false, currentIndex: 0, flipped: false, cardsArray: [] };
+    // ------------------- MULTI-SET ARCHITECTURE -------------------
+    let dataSets = new Map();  // id -> { name, cards: [] , updatedAt }
+    let activeSetId = null;
+    let studySession = { active: false, idx: 0, flipped: false, cardsList: [] };
 
-    // Helper: save to localStorage (instant)
-    function persistSets() {
-        const obj = {};
-        for (let [id, setData] of sets.entries()) {
-            obj[id] = { name: setData.name, cards: setData.cards };
+    // helpers
+    function saveToLocal() {
+        const exportMap = {};
+        for (let [id, set] of dataSets.entries()) {
+            exportMap[id] = { name: set.name, cards: set.cards, updatedAt: set.updatedAt || Date.now() };
         }
-        localStorage.setItem('flash_sets_v2', JSON.stringify(obj));
-        localStorage.setItem('current_set_id', currentSetId);
+        localStorage.setItem('flashforge_sets_v3', JSON.stringify(exportMap));
+        localStorage.setItem('flashforge_active', activeSetId);
     }
 
-    function loadFromStorage() {
-        const raw = localStorage.getItem('flash_sets_v2');
+    function loadFromLocal() {
+        const raw = localStorage.getItem('flashforge_sets_v3');
         if (raw) {
             const parsed = JSON.parse(raw);
-            sets.clear();
-            for (let [id, data] of Object.entries(parsed)) {
-                sets.set(id, { name: data.name, cards: data.cards || [] });
+            dataSets.clear();
+            for (const [id, val] of Object.entries(parsed)) {
+                dataSets.set(id, { name: val.name, cards: val.cards || [], updatedAt: val.updatedAt || Date.now() });
             }
         }
-        const storedCurrent = localStorage.getItem('current_set_id');
-        if (storedCurrent && sets.has(storedCurrent)) currentSetId = storedCurrent;
-        // default demo set if none
-        if (sets.size === 0) {
-            const demoId = 'set_demo_' + Date.now();
-            sets.set(demoId, {
-                name: 'Sample Set',
+        const storedActive = localStorage.getItem('flashforge_active');
+        if (dataSets.size === 0) {
+            const demoId = 'set_' + Date.now();
+            dataSets.set(demoId, {
+                name: '✨ Master Deck',
                 cards: [
-                    { front: "Quantum Computing", back: "Uses quantum bits (qubits)" },
-                    { front: "HTML", back: "HyperText Markup Language" },
-                    { front: "CSS Grid", back: "2D layout system" },
-                    { front: "Vue.js", back: "Progressive JS framework" }
-                ]
+                    { front: "Neural Network", back: "Computing system inspired by biological neurons" },
+                    { front: "Quantum Entanglement", back: "Particles instantaneously connected" },
+                    { front: "CSS Container Queries", back: "Style based on parent size" },
+                    { front: "Rust Language", back: "Memory-safe systems programming" }
+                ],
+                updatedAt: Date.now()
             });
-            currentSetId = demoId;
-        } else if (!currentSetId) currentSetId = Array.from(sets.keys())[0];
-        persistSets();
+            activeSetId = demoId;
+        } else if (storedActive && dataSets.has(storedActive)) activeSetId = storedActive;
+        else activeSetId = Array.from(dataSets.keys())[0];
+        saveToLocal();
     }
 
     function updateAllUI() {
-        if (!currentSetId) return;
-        const set = sets.get(currentSetId);
-        if (!set) return;
-        document.getElementById('totalCardsStat').innerText = set.cards.length;
-        document.getElementById('setNameDisplay').innerHTML = `<i class="fas fa-folder-open"></i> ${escapeHtml(set.name)}`;
-        renderCardList();
+        if (!activeSetId) return;
+        const set = dataSets.get(activeSetId);
+        document.getElementById('liveTotalCards').innerText = set.cards.length;
+        document.getElementById('statsTotalCards').innerText = set.cards.length;
+        document.getElementById('currentSetNameSpan').innerText = set.name;
+        document.getElementById('lastUpdatedMeta').innerText = new Date(set.updatedAt || Date.now()).toLocaleString();
+        renderCardsGrid();
         updateSetDropdown();
-        updateExportPreviewOnly();
-        // Reset study mode UI if open
-        if (document.getElementById('studyTab').classList.contains('active')) updateStudyInterfaceStatic();
+        updateExportPreview();
+        if (document.getElementById('study').classList.contains('active')) refreshStudyPlaceholder();
     }
 
-    function renderCardList() {
-        const container = document.getElementById('allCardsContainer');
-        const set = sets.get(currentSetId);
+    function renderCardsGrid() {
+        const container = document.getElementById('cardsGridContainer');
+        const set = dataSets.get(activeSetId);
         if (!set || set.cards.length === 0) {
-            container.innerHTML = `<div class="empty-state" style="color:#94a3b8; text-align:center; padding:40px;"><i class="fas fa-inbox"></i> No cards. Add via Bulk or Quick add.</div>`;
+            container.innerHTML = `<div style="text-align:center; padding: 3rem; background:#0f172a80; border-radius: 2rem;"><i class="fas fa-inbox fa-2x"></i><p>No cards. Use Bulk Forge to add instantly.</p></div>`;
             return;
         }
         container.innerHTML = '';
         set.cards.forEach((card, idx) => {
             const cardDiv = document.createElement('div');
-            cardDiv.className = 'flashcard';
-            cardDiv.setAttribute('data-idx', idx);
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'flashcard-content';
-            contentDiv.innerText = card.front;
-            const numSpan = document.createElement('div');
-            numSpan.className = 'flashcard-number';
-            numSpan.innerText = idx+1;
-            const delBtn = document.createElement('button');
-            delBtn.className = 'delete-card-btn';
-            delBtn.innerHTML = '<i class="fas fa-trash"></i> Delete';
-            delBtn.onclick = (e) => {
+            cardDiv.className = 'flashcard-card';
+            const innerDiv = document.createElement('div');
+            innerDiv.className = 'flashcard-content';
+            innerDiv.style.fontWeight = '500';
+            innerDiv.innerText = card.front;
+            const indexSpan = document.createElement('div');
+            indexSpan.className = 'card-index';
+            indexSpan.innerText = idx + 1;
+            const delAction = document.createElement('button');
+            delAction.innerHTML = '<i class="fas fa-trash-alt"></i> Delete';
+            delAction.style.background = '#334155';
+            delAction.style.border = 'none';
+            delAction.style.borderRadius = '2rem';
+            delAction.style.padding = '0.3rem 0.8rem';
+            delAction.style.marginTop = '12px';
+            delAction.style.fontSize = '0.7rem';
+            delAction.style.cursor = 'pointer';
+            delAction.style.width = 'fit-content';
+            delAction.onclick = (e) => {
                 e.stopPropagation();
                 if (confirm('Remove this card?')) {
                     set.cards.splice(idx, 1);
-                    persistSets();
-                    renderCardList();
+                    set.updatedAt = Date.now();
+                    saveToLocal();
                     updateAllUI();
-                    showToast('Card removed', 'info');
+                    showToast('Card removed', '#f97316');
                 }
             };
-            cardDiv.appendChild(numSpan);
-            cardDiv.appendChild(contentDiv);
-            cardDiv.appendChild(delBtn);
-            cardDiv.addEventListener('click', (e) => {
-                if(e.target === delBtn || delBtn.contains(e.target)) return;
-                if(cardDiv.classList.contains('flipped')) {
-                    cardDiv.classList.remove('flipped');
-                    contentDiv.innerText = card.front;
+            cardDiv.appendChild(indexSpan);
+            cardDiv.appendChild(innerDiv);
+            cardDiv.appendChild(delAction);
+            cardDiv.addEventListener('click', () => {
+                if (cardDiv.classList.contains('flipped-card')) {
+                    cardDiv.classList.remove('flipped-card');
+                    innerDiv.innerText = card.front;
                 } else {
-                    cardDiv.classList.add('flipped');
-                    contentDiv.innerText = card.back;
+                    cardDiv.classList.add('flipped-card');
+                    innerDiv.innerText = card.back;
                 }
             });
             container.appendChild(cardDiv);
@@ -434,266 +521,251 @@
     }
 
     function updateSetDropdown() {
-        const select = document.getElementById('setSelectDropdown');
+        const select = document.getElementById('setSelector');
         select.innerHTML = '';
-        for (let [id, setData] of sets.entries()) {
-            const option = document.createElement('option');
-            option.value = id;
-            option.textContent = `${setData.name} (${setData.cards.length} cards)`;
-            if (id === currentSetId) option.selected = true;
-            select.appendChild(option);
+        for (let [id, set] of dataSets.entries()) {
+            const opt = document.createElement('option');
+            opt.value = id;
+            opt.textContent = `${set.name} (${set.cards.length} cards)`;
+            if (id === activeSetId) opt.selected = true;
+            select.appendChild(opt);
         }
     }
 
-    // BULK add (ultra fast)
-    function bulkAddFromText() {
-        const raw = document.getElementById('bulkTextArea').value;
-        if (!raw.trim()) { showToast('Paste some cards first!', 'warning'); return; }
+    function switchSet(id) {
+        if (dataSets.has(id)) {
+            activeSetId = id;
+            saveToLocal();
+            updateAllUI();
+            studySession.active = false;
+            showToast(`Switched to "${dataSets.get(id).name}"`, '#10b981');
+        }
+    }
+
+    function bulkAddFromInput() {
+        const raw = document.getElementById('bulkInput').value;
+        if (!raw.trim()) { showToast('Paste term | definition lines', '#ef4444'); return; }
         const lines = raw.split(/\r?\n/);
-        let addedCount = 0;
-        const set = sets.get(currentSetId);
+        let added = 0;
+        const set = dataSets.get(activeSetId);
         for (let line of lines) {
             line = line.trim();
-            if (line === "") continue;
-            let separator = '|';
-            let sepIndex = line.indexOf('|');
-            if (sepIndex === -1) {
-                sepIndex = line.indexOf(';');
-                if(sepIndex !== -1) separator = ';';
+            if (line === '') continue;
+            let sep = line.includes('|') ? '|' : (line.includes(';') ? ';' : null);
+            let front, back;
+            if (sep) {
+                const idx = line.indexOf(sep);
+                front = line.substring(0, idx).trim();
+                back = line.substring(idx + 1).trim();
+            } else {
+                front = line;
+                back = line;
             }
-            if (sepIndex !== -1) {
-                let front = line.substring(0, sepIndex).trim();
-                let back = line.substring(sepIndex + 1).trim();
-                if (front && back) {
-                    set.cards.push({ front, back });
-                    addedCount++;
-                } else if (front && !back) {
-                    set.cards.push({ front, back: front });
-                    addedCount++;
-                }
-            } else if (line.length > 0) {
-                // fallback treat as front=line, back=line
-                set.cards.push({ front: line, back: line });
-                addedCount++;
+            if (front) {
+                set.cards.push({ front, back: back || front });
+                added++;
             }
         }
-        if (addedCount > 0) {
-            persistSets();
+        if (added) {
+            set.updatedAt = Date.now();
+            saveToLocal();
             updateAllUI();
-            showToast(`✨ Added ${addedCount} cards instantly!`, 'success');
-            document.getElementById('bulkTextArea').value = '';
-        } else {
-            showToast('No valid cards found. Use format: front | back', 'error');
-        }
+            showToast(`🔥 Added ${added} cards in milliseconds!`, '#22c55e');
+            document.getElementById('bulkInput').value = '';
+        } else { showToast('No valid entries', '#ef4444'); }
     }
 
-    function quickAddCard() {
+    function quickAdd() {
         const front = document.getElementById('quickFront').value.trim();
         const back = document.getElementById('quickBack').value.trim();
-        if(!front || !back) { showToast('Both front & back required', 'error'); return; }
-        const set = sets.get(currentSetId);
+        if (!front || !back) { showToast('Fill both sides', '#f97316'); return; }
+        const set = dataSets.get(activeSetId);
         set.cards.push({ front, back });
-        persistSets();
+        set.updatedAt = Date.now();
+        saveToLocal();
         updateAllUI();
         document.getElementById('quickFront').value = '';
         document.getElementById('quickBack').value = '';
-        showToast('Card added', 'success');
+        showToast('Card added', '#22c55e');
     }
 
-    function shuffleCards() {
-        const set = sets.get(currentSetId);
-        if(set.cards.length <= 1) return;
+    function shuffleCardsList() {
+        const set = dataSets.get(activeSetId);
+        if (set.cards.length <= 1) return;
         for (let i = set.cards.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [set.cards[i], set.cards[j]] = [set.cards[j], set.cards[i]];
         }
-        persistSets();
-        renderCardList();
-        showToast('Cards shuffled', 'info');
+        set.updatedAt = Date.now();
+        saveToLocal();
+        renderCardsGrid();
+        showToast('Deck shuffled', '#a78bfa');
+    }
+
+    function newSet() {
+        let name = prompt('New set name:', 'My Ultimate Set');
+        if (!name) return;
+        const newId = 'set_' + Date.now() + '_' + Math.random().toString(36);
+        dataSets.set(newId, { name: name.slice(0, 35), cards: [], updatedAt: Date.now() });
+        activeSetId = newId;
+        saveToLocal();
+        updateAllUI();
+        showToast(`✨ Created "${name}"`, '#3b82f6');
     }
 
     function deleteCurrentSet() {
-        if(sets.size === 1) { showToast('Cannot delete the only set. Create a new one first.', 'error'); return; }
-        if(confirm(`Permanently delete set "${sets.get(currentSetId).name}"?`)) {
-            sets.delete(currentSetId);
-            currentSetId = Array.from(sets.keys())[0];
-            persistSets();
+        if (dataSets.size === 1) { showToast('Cannot delete last set, create another first', '#ef4444'); return; }
+        if (confirm(`Delete "${dataSets.get(activeSetId).name}" permanently?`)) {
+            dataSets.delete(activeSetId);
+            activeSetId = Array.from(dataSets.keys())[0];
+            saveToLocal();
             updateAllUI();
-            showToast('Set deleted', 'info');
+            showToast('Set deleted', '#ef4444');
         }
     }
 
-    function createNewSet() {
-        let newName = prompt('Enter new set name:', `Set ${sets.size+1}`);
-        if(!newName) return;
-        const newId = 'set_' + Date.now() + '_' + Math.random().toString(36);
-        sets.set(newId, { name: newName.substring(0,30), cards: [] });
-        currentSetId = newId;
-        persistSets();
-        updateAllUI();
-        showToast(`Created set: ${newName}`, 'success');
-    }
-
-    function switchSet(setId) {
-        if(sets.has(setId)) {
-            currentSetId = setId;
-            persistSets();
-            updateAllUI();
-            studyState.active = false;  // reset study mode
-            showToast(`Switched to "${sets.get(setId).name}"`, 'info');
-        }
-    }
-
-    // STUDY MODULE
+    // Study engine
     function startStudy() {
-        const set = sets.get(currentSetId);
-        if(!set.cards.length) { showToast('No flashcards in this set', 'error'); return; }
-        studyState.active = true;
-        studyState.currentIndex = 0;
-        studyState.flipped = false;
-        studyState.cardsArray = set.cards;
-        updateStudyCardUI();
-        document.getElementById('flipStudyBtn').style.display = 'inline-flex';
-        document.getElementById('startStudySession').style.display = 'none';
+        const set = dataSets.get(activeSetId);
+        if (!set.cards.length) { showToast('Add some cards first', '#f97316'); return; }
+        studySession.active = true;
+        studySession.idx = 0;
+        studySession.flipped = false;
+        studySession.cardsList = set.cards;
+        renderStudyUI();
+        document.getElementById('flipStudyAction').style.display = 'inline-flex';
+        document.getElementById('studyStartBtn').style.display = 'none';
     }
-    function updateStudyCardUI() {
-        if(!studyState.active || studyState.cardsArray.length===0) return;
-        const card = studyState.cardsArray[studyState.currentIndex];
-        const mainText = document.getElementById('studyMainText');
-        const sideLabel = document.getElementById('studySideLabel');
-        if(studyState.flipped) {
-            sideLabel.innerText = 'BACK (definition)';
-            mainText.innerText = card.back;
+    function renderStudyUI() {
+        if (!studySession.active || !studySession.cardsList.length) return;
+        const card = studySession.cardsList[studySession.idx];
+        const labelSpan = document.getElementById('studySideLabel');
+        const textSpan = document.getElementById('studyMainText');
+        if (studySession.flipped) {
+            labelSpan.innerText = '📖 BACK (Answer)';
+            textSpan.innerText = card.back;
         } else {
-            sideLabel.innerText = 'FRONT (term)';
-            mainText.innerText = card.front;
+            labelSpan.innerText = '🧠 FRONT (Term)';
+            textSpan.innerText = card.front;
         }
-        const prog = ((studyState.currentIndex+1)/studyState.cardsArray.length)*100;
-        document.getElementById('studyProgressFill').style.width = `${prog}%`;
-        document.getElementById('cardCounter').innerText = `${studyState.currentIndex+1} / ${studyState.cardsArray.length}`;
+        const percent = ((studySession.idx + 1) / studySession.cardsList.length) * 100;
+        document.getElementById('studyProgressFill').style.width = `${percent}%`;
+        document.getElementById('studyCounter').innerText = `${studySession.idx+1} / ${studySession.cardsList.length}`;
     }
-    function flipStudy() { if(studyState.active) { studyState.flipped = !studyState.flipped; updateStudyCardUI(); } }
-    function prevStudy() { if(studyState.active && studyState.currentIndex > 0) { studyState.currentIndex--; studyState.flipped=false; updateStudyCardUI(); } }
-    function nextStudy() { if(studyState.active && studyState.currentIndex+1 < studyState.cardsArray.length) { studyState.currentIndex++; studyState.flipped=false; updateStudyCardUI(); } }
-    function updateStudyInterfaceStatic() {
-        const set = sets.get(currentSetId);
-        if(set && set.cards.length && !studyState.active) {
-            document.getElementById('studyMainText').innerHTML = `${set.cards.length} cards ready. Press Start.`;
-            document.getElementById('studySideLabel').innerText = 'Ready';
-            document.getElementById('flipStudyBtn').style.display = 'none';
-            document.getElementById('startStudySession').style.display = 'inline-flex';
+    function flipCardStudy() { if (studySession.active) { studySession.flipped = !studySession.flipped; renderStudyUI(); } }
+    function prevCardStudy() { if (studySession.active && studySession.idx > 0) { studySession.idx--; studySession.flipped = false; renderStudyUI(); } }
+    function nextCardStudy() { if (studySession.active && studySession.idx + 1 < studySession.cardsList.length) { studySession.idx++; studySession.flipped = false; renderStudyUI(); } }
+    function refreshStudyPlaceholder() {
+        const set = dataSets.get(activeSetId);
+        if (!set || set.cards.length === 0) {
+            document.getElementById('studyMainText').innerHTML = '✨ No cards, create some.';
+            document.getElementById('flipStudyAction').style.display = 'none';
+            document.getElementById('studyStartBtn').style.display = 'inline-flex';
+        } else if (!studySession.active) {
+            document.getElementById('studyMainText').innerHTML = `${set.cards.length} cards ready. Hit Start.`;
+            document.getElementById('flipStudyAction').style.display = 'none';
+            document.getElementById('studyStartBtn').style.display = 'inline-flex';
             document.getElementById('studyProgressFill').style.width = '0%';
-            document.getElementById('cardCounter').innerText = `0 / ${set.cards.length}`;
-        } else if(set && set.cards.length===0) {
-            document.getElementById('studyMainText').innerHTML = 'No cards. Add some!';
-            document.getElementById('flipStudyBtn').style.display = 'none';
-        } else if(studyState.active) updateStudyCardUI();
+            document.getElementById('studyCounter').innerHTML = `0 / ${set.cards.length}`;
+        } else { renderStudyUI(); }
     }
 
-    // Export
     function exportJSON() {
-        const set = sets.get(currentSetId);
-        const exportObj = { setName: set.name, cards: set.cards, exportedAt: new Date().toISOString() };
-        const jsonStr = JSON.stringify(exportObj, null, 2);
-        downloadFile(jsonStr, `${set.name.replace(/[^a-z0-9]/gi, '_')}.json`, 'application/json');
-        showToast('JSON exported', 'success');
+        const set = dataSets.get(activeSetId);
+        const blobData = JSON.stringify({ name: set.name, cards: set.cards, exportedAt: new Date().toISOString() }, null, 2);
+        downloadFile(blobData, `${set.name.replace(/[^a-z0-9]/gi, '_')}.json`, 'application/json');
+        showToast('JSON exported', '#10b981');
     }
     function exportCSV() {
-        const set = sets.get(currentSetId);
+        const set = dataSets.get(activeSetId);
         let csv = "Front,Back\n";
-        set.cards.forEach(c => { csv += `"${c.front.replace(/"/g, '""')}","${c.back.replace(/"/g, '""')}"\n`; });
-        downloadFile(csv, `${set.name}_flashcards.csv`, 'text/csv');
+        set.cards.forEach(c => csv += `"${c.front.replace(/"/g, '""')}","${c.back.replace(/"/g, '""')}"\n`);
+        downloadFile(csv, `${set.name}_cards.csv`, 'text/csv');
     }
-    function printSet() {
-        const set = sets.get(currentSetId);
-        let printHtml = `<html><head><title>${set.name}</title><style>body{font-family:sans-serif;padding:20px;} .card{border:1px solid #ccc;margin:15px;padding:15px;}</style></head><body><h1>${set.name}</h1>`;
-        set.cards.forEach((c,i)=> { printHtml+=`<div class='card'><strong>${i+1}. ${c.front}</strong><br>Answer: ${c.back}</div>`; });
-        printHtml+=`</body></html>`;
-        const win = window.open();
-        win.document.write(printHtml);
-        win.document.close();
-        win.print();
+    function printCards() {
+        const set = dataSets.get(activeSetId);
+        let winHtml = `<html><head><title>${set.name}</title><style>body{font-family:Inter; padding:2rem;} .print-card{border:1px solid #ccc; margin:12px; padding:16px; border-radius:20px;}</style></head><body><h1>${set.name}</h1>`;
+        set.cards.forEach((c,i)=> winHtml+=`<div class="print-card"><strong>${i+1}. ${c.front}</strong><br>→ ${c.back}</div>`);
+        winHtml+=`</body></html>`;
+        const w = window.open();
+        w.document.write(winHtml);
+        w.document.close();
+        w.print();
     }
-    function importJsonFromFile(file) {
+    function importSetFromJSON(file) {
         const reader = new FileReader();
-        reader.onload = (e) => {
+        reader.onload = (ev) => {
             try {
-                const imported = JSON.parse(e.target.result);
-                let newCards = [];
-                if(imported.cards && Array.isArray(imported.cards)) newCards = imported.cards;
-                else if(imported.flashcards) newCards = imported.flashcards;
-                else if(Array.isArray(imported)) newCards = imported;
-                const set = sets.get(currentSetId);
-                if(newCards.length) set.cards = newCards.map(c => ({ front: c.front || c.term || c.question || "?", back: c.back || c.definition || c.answer || "?" }));
-                else showToast('Invalid JSON structure', 'error');
-                persistSets();
+                const parsed = JSON.parse(ev.target.result);
+                let importedCards = parsed.cards || parsed.flashcards || (Array.isArray(parsed) ? parsed : []);
+                if (!importedCards.length) throw new Error();
+                const newCards = importedCards.map(c => ({ front: c.front || c.term || c.question || '?', back: c.back || c.definition || c.answer || '?' }));
+                const set = dataSets.get(activeSetId);
+                set.cards = newCards;
+                set.updatedAt = Date.now();
+                saveToLocal();
                 updateAllUI();
-                showToast(`Imported ${set.cards.length} cards`, 'success');
-            } catch(err) { showToast('JSON parse error', 'error'); }
+                showToast(`Imported ${newCards.length} cards`, '#10b981');
+            } catch(e) { showToast('Invalid JSON file', '#ef4444'); }
         };
         reader.readAsText(file);
     }
-
-    function downloadFile(content, filename, mime) {
-        const blob = new Blob([content], {type: mime});
+    function downloadFile(content, name, type) {
         const a = document.createElement('a');
+        const blob = new Blob([content], { type });
         a.href = URL.createObjectURL(blob);
-        a.download = filename;
+        a.download = name;
         a.click();
         URL.revokeObjectURL(a.href);
     }
-    function updateExportPreviewOnly() {
-        const set = sets.get(currentSetId);
-        if(set) document.getElementById('exportPreviewArea').value = `${set.name} — ${set.cards.length} cards. Export JSON for backup.`;
-        else document.getElementById('exportPreviewArea').value = 'No set';
+    function updateExportPreview() {
+        const set = dataSets.get(activeSetId);
+        document.getElementById('exportPreviewText').value = `${set.name} — ${set.cards.length} cards.\nExport JSON for full backup.`;
     }
-    function showToast(msg, type='success') {
-        const toast = document.getElementById('notificationToast');
-        toast.innerHTML = `<i class="fas fa-${type==='error'?'exclamation-circle':'check-circle'}"></i> ${msg}`;
-        toast.style.background = type==='error'?'#dc2626':'#22c55e';
-        toast.classList.add('show');
-        setTimeout(()=>toast.classList.remove('show'), 2200);
-    }
-    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
-
-    // Event binding
-    function bindEvents() {
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-                tab.classList.add('active');
-                document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-                document.getElementById(tab.getAttribute('data-tab')).classList.add('active');
-                if(tab.getAttribute('data-tab') === 'studyTab') updateStudyInterfaceStatic();
-                if(tab.getAttribute('data-tab') === 'listTab') renderCardList();
-                if(tab.getAttribute('data-tab') === 'exportTab') updateExportPreviewOnly();
-            });
-        });
-        document.getElementById('bulkAddBtn').addEventListener('click', bulkAddFromText);
-        document.getElementById('clearBulkBtn').addEventListener('click', ()=>document.getElementById('bulkTextArea').value='');
-        document.getElementById('quickAddBtn').addEventListener('click', quickAddCard);
-        document.getElementById('shuffleCardsBtn').addEventListener('click', shuffleCards);
-        document.getElementById('deleteCurrentSetBtn').addEventListener('click', deleteCurrentSet);
-        document.getElementById('createNewSetBtn').addEventListener('click', createNewSet);
-        document.getElementById('setSelectDropdown').addEventListener('change', (e)=>switchSet(e.target.value));
-        document.getElementById('startStudySession').addEventListener('click', startStudy);
-        document.getElementById('flipStudyBtn').addEventListener('click', flipStudy);
-        document.getElementById('studyPrevBtn').addEventListener('click', prevStudy);
-        document.getElementById('studyNextBtn').addEventListener('click', nextStudy);
-        document.getElementById('exportJSONBtnSet').addEventListener('click', exportJSON);
-        document.getElementById('exportCSVSetBtn').addEventListener('click', exportCSV);
-        document.getElementById('printSetBtn').addEventListener('click', printSet);
-        document.getElementById('importJsonSetBtn').addEventListener('click', ()=>{
-            const fileInput = document.getElementById('jsonUploadInput');
-            if(fileInput.files.length) importJsonFromFile(fileInput.files[0]);
-            else showToast('Select a JSON file first', 'error');
-        });
+    function showToast(msg, color = '#10b981') {
+        const toast = document.getElementById('globalToast');
+        toast.innerHTML = `<i class="fas fa-bell"></i> ${msg}`;
+        toast.style.background = color;
+        toast.classList.add('toast-show');
+        setTimeout(() => toast.classList.remove('toast-show'), 2100);
     }
 
-    loadFromStorage();
-    bindEvents();
+    // event binding & tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const tabId = btn.getAttribute('data-tab');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            if (tabId === 'study') refreshStudyPlaceholder();
+            if (tabId === 'cards') renderCardsGrid();
+        });
+    });
+
+    loadFromLocal();
     updateAllUI();
-    if(sets.get(currentSetId) && sets.get(currentSetId).cards.length === 0) renderCardList();
+    // event listeners
+    document.getElementById('bulkAddAction').addEventListener('click', bulkAddFromInput);
+    document.getElementById('clearBulkField').addEventListener('click', () => document.getElementById('bulkInput').value = '');
+    document.getElementById('quickAddSingle').addEventListener('click', quickAdd);
+    document.getElementById('shuffleCollectionBtn').addEventListener('click', shuffleCardsList);
+    document.getElementById('newSetBtn').addEventListener('click', newSet);
+    document.getElementById('deleteSetBtn').addEventListener('click', deleteCurrentSet);
+    document.getElementById('setSelector').addEventListener('change', (e) => switchSet(e.target.value));
+    document.getElementById('studyStartBtn').addEventListener('click', startStudy);
+    document.getElementById('flipStudyAction').addEventListener('click', flipCardStudy);
+    document.getElementById('studyPrevBtn').addEventListener('click', prevCardStudy);
+    document.getElementById('studyNextBtn').addEventListener('click', nextCardStudy);
+    document.getElementById('exportJsonBtn').addEventListener('click', exportJSON);
+    document.getElementById('exportCsvBtn').addEventListener('click', exportCSV);
+    document.getElementById('printFlashcardsBtn').addEventListener('click', printCards);
+    document.getElementById('importBackupBtn').addEventListener('click', () => {
+        const fileInput = document.getElementById('restoreFileInput');
+        if (fileInput.files.length) importSetFromJSON(fileInput.files[0]);
+        else showToast('Select a JSON file', '#f97316');
+    });
+    window.addEventListener('beforeunload', () => saveToLocal());
 </script>
 </body>
 </html>
